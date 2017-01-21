@@ -22349,7 +22349,7 @@
 	      // User is logged in
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'animated fadeIn animated-fast' },
+	        { className: 'animated fadeIn animated-fast', style: { maxWidth: screen.width, maxHeight: screen.height } },
 	        this.renderModal(),
 	        _react2.default.createElement(
 	          'div',

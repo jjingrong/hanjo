@@ -33,7 +33,7 @@ export class SwipeArrowScreen  extends React.Component {
   render() {
     // User is logged in
     return (
-      <div className='animated fadeIn animated-fast'>
+      <div className='animated fadeIn animated-fast' style={{maxWidth: screen.width, maxHeight: screen.height}}>
         {this.renderModal()}
         <div style={{height:(topSize*100)+'vh'}}>
           <div style={{
