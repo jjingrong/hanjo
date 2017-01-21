@@ -22376,7 +22376,7 @@
 	        },
 	        _react2.default.createElement(
 	          'p',
-	          null,
+	          { id: 'modalStatusText' },
 	          this.state.modalText
 	        ),
 	        _react2.default.createElement(
@@ -22484,7 +22484,7 @@
 	            console.log('eliminated by', data.self_hit_by);
 	            _this4.setState({
 	              modalIsOpen: true,
-	              modalText: 'eliminated by:' + data.self_hit_by,
+	              modalText: 'Eliminated by:' + data.self_hit_by,
 	              arrowIsFlying: false
 	            });
 	            // do dead things

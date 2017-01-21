@@ -53,7 +53,7 @@ export class SwipeArrowScreen  extends React.Component {
         style={modalStyles}
         contentLabel="Modal"
       >
-        <p>{this.state.modalText}</p>
+        <p id='modalStatusText'>{this.state.modalText}</p> 
         <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
       </Modal>
     )
@@ -147,10 +147,10 @@ export class SwipeArrowScreen  extends React.Component {
             clearInterval(this.state.pollFunction);
             console.log('eliminated by', data.self_hit_by);
             this.setState({
-              modalIsOpen: true,
-              modalText: 'eliminated by:' + data.self_hit_by,
+              modalIsOpen:true,
+              modalText: 'Eliminated by:' + data.self_hit_by,
               arrowIsFlying: false,
-            });
+            })
             // do dead things
           }
 
