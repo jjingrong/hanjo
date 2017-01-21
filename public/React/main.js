@@ -39,6 +39,7 @@ class MainPanel extends React.Component {
   }
   
   setLatLong(lat, lon) {
+    console.log(lat, lon)
     this.setState({
       latitude: lat,
       longitude: lon
