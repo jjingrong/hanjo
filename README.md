@@ -10,6 +10,8 @@ npm install
 nodemon
 ```
 
+Visit webpage at `localhost:3000`
+
 ---
 
 ### Built with
