@@ -146,6 +146,9 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  -webkit-display: flex;
+  -webkit-flex-direction: column;
+  -webkit-justify-content: space-around;
   height: 100vh;
 }
 
@@ -184,6 +187,9 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-display: flex;
+  -webkit-align-items: center;
+  -webkit-justify-content: center;
   font-family: bignoodletoo;
   font-size: 32px;
   color: white;

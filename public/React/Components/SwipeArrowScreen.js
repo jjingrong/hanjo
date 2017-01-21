@@ -166,6 +166,9 @@ const styleSheet = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    webkitDisplay: 'flex',
+    webkitAlignItems: 'center',
+    webkitJustifyContent: 'center',
     position: 'absolute',
     bottom: '0',
     width: '90%',
@@ -194,6 +197,8 @@ const modalStyles = {
     borderRadius          : '4px',
     display               :'flex',
     justifyContent        :'center',
+    webkitDisplay         : 'flex',
+    webkitJustifyContent  : 'center',
     height                :'30vh',
   }
 };
