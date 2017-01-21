@@ -128,7 +128,7 @@ export class SwipeArrowScreen  extends React.Component {
     if (this.state.pollFunction) {
       clearInterval(this.state.pollFunction);
     }
-    var func = setInterval(this.checkStatusFromServer.bind(this), 1000);
+    var func = setInterval(this.checkStatusFromServer.bind(this), 600);
 
     this.setState({ pollFunction: func });
   }
