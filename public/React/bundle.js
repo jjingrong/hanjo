@@ -22331,8 +22331,7 @@
 	      arrowIsFlying: false,
 	      arrowStatusText: 'Traversing',
 	      modalText: '',
-	      heading: 0,
-	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + screen.width + "x" + parseInt(screen.height * topSize) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
+	      heading: 0
 	    };
 	    return _this;
 	  }
@@ -22340,6 +22339,8 @@
 	  _createClass(SwipeArrowScreen, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      //setTimeout(this.setupMap.bind(this), 3000);
+	      this.setupMap();
 	      this.setupDeviceCompass();
 	      this.setupServerConnection();
 	    }
@@ -22351,27 +22352,7 @@
 	        'div',
 	        { className: 'animated fadeIn animated-fast' },
 	        this.renderModal(),
-	        _react2.default.createElement(
-	          'div',
-	          { style: { height: topSize * 100 + 'vh' } },
-	          _react2.default.createElement(
-	            'div',
-	            { style: { backgroundImage: 'url(\"' + this.state.locationURL + '\")', position: 'relative', height: '100%' } },
-	            _react2.default.createElement('img', { src: '/images/hanzoIcon.png',
-	              style: {
-	                position: 'absolute',
-	                left: '0',
-	                right: '0',
-	                height: '50px',
-	                width: '50px',
-	                top: '48%',
-	                margin: '0 auto',
-	                WebkitTransform: 'rotate(' + (360 - this.state.heading) + 'deg)',
-	                transform: 'rotate(' + (360 - this.state.heading) + 'deg)'
-	              }
-	            })
-	          )
-	        ),
+	        _react2.default.createElement('div', { id: 'map', style: { height: topSize * 100 + 'vh' } }),
 	        _react2.default.createElement(
 	          'div',
 	          { style: { height: '25vh' } },
@@ -22467,6 +22448,7 @@
 	          var compassHeading = 360 - currentOrientation.alpha;
 	          // Set compass heading to state
 	          _this3.setState({ heading: compassHeading });
+	          _this3.state.map.setHeading(compassHeading);
 	        });
 	      }).catch(function (errorMessage) {
 	        // Device Orientation Events are not supported
@@ -22482,6 +22464,28 @@
 	      var func = setInterval(this.checkStatusFromServer.bind(this), 1000);
 	
 	      this.setState({ pollFunction: func });
+	    }
+	  }, {
+	    key: 'setupMap',
+	    value: function setupMap() {
+	      var hanzo = new google.maps.LatLng(parseFloat(this.props.latitude), parseFloat(this.props.longitude));
+	
+	      var map = new google.maps.Map(document.getElementById('map'), {
+	        zoom: 15,
+	        center: hanzo,
+	        mapTypeId: 'roadmap'
+	      });
+	
+	      map.setOptions({ draggable: false });
+	      this.setState({ map: map });
+	
+	      var marker = new google.maps.Marker({
+	        position: hanzo,
+	        map: map,
+	        icon: {
+	          size: new google.maps.Size(50, 50)
+	        }
+	      });
 	    }
 	  }, {
 	    key: 'checkStatusFromServer',
