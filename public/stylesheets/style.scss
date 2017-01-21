@@ -160,10 +160,23 @@ p {
 	margin-bottom: 2em;
 	text-transform: uppercase;
 	width: 280px;
-
   &:hover {
   	background-color: #d44179;
   }
+}
+
+#respawnButton {
+  height: 50px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background-color: #fc8d83;
+	color: #eee;
+	font-weight: bold;
+	margin-bottom: 2em;
+	text-transform: uppercase;
+  width: 60% !important;
+  margin-left: 0px !important;
 }
 
 #arrowStatusText {
@@ -174,4 +187,9 @@ p {
   font-family: bignoodletoo;
   font-size: 32px;
   color: white;
+}
+
+.animated-fast {
+  animation-duration: 0.5s;
+  animation-delay: 0.1s;
 }
