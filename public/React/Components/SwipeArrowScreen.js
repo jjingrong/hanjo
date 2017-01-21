@@ -12,6 +12,7 @@ export class SwipeArrowScreen  extends React.Component {
     super(props);
     this.state = {
       arrowIsFlying: false,
+      arrowStatusText: 'Traversing'
     }
   }
   
@@ -33,12 +34,23 @@ export class SwipeArrowScreen  extends React.Component {
   
   renderArrowStatus() {
     if (this.state.arrowIsFlying) {
-      
+      return (
+        <div id='arrowStatusText'>
+          {this.state.arrowStatusText}
+        </div>
+      )
     } else {
       return (
-        <input className='animated fadeIn' id='shootButton' value="Shoot" style={styleSheet.button}/>
+        <input className='animated fadeIn' id='shootButton' value="Shoot" style={styleSheet.button} onClick={this.launchArrow.bind(this)}/>
       )
     }
+  }
+  
+  launchArrow() {
+    // Send api to launch
+    
+    this.setState({arrowIsFlying: true})
+    // Start listening to arrow events
   }
 }
 
