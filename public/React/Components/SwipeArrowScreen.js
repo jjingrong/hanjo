@@ -38,6 +38,20 @@ export class SwipeArrowScreen  extends React.Component {
         {this.renderModal()}
         <div id='map' style={{ width: screen.width, height:(topSize*100)+'vh'}}>
         </div>
+        <img src={'/images/hanzoIcon.png'}
+          style={{
+            position: 'absolute',
+            left: '0',
+            right: '0',
+            height: '50px',
+            width: '50px',
+            top: '30%',
+            margin: '0 auto',
+            WebkitTransform: 'rotate('+(this.state.heading)+'deg)',
+            transform: 'rotate('+(this.state.heading)+'deg)',
+          }}
+        />
+
         <div style={{height:'25vh'}}>
           {this.renderArrowStatus()}
         </div>
@@ -116,7 +130,6 @@ export class SwipeArrowScreen  extends React.Component {
         var compassHeading = 360 - currentOrientation.alpha;
         // Set compass heading to state
         this.setState({ heading: compassHeading });
-        this.state.map.setHeading(compassHeading);
       });
 
     }).catch(function(errorMessage) { // Device Orientation Events are not supported
@@ -142,29 +155,19 @@ export class SwipeArrowScreen  extends React.Component {
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 15,
       center: hanzo,
-      mapTypeId: 'roadmap'
+      heading: 0
     });
 
     var bounds = new google.maps.LatLngBounds();
 
-    map.setOptions({ draggable: false });
+    map.setOptions({ draggable: false, zoomControl: false });
     this.setState({ map: map });
 
     var marker = new google.maps.Marker({
       position: hanzo,
       map: map,
-      icon: {
-        url: '/images/hanzoIcon_small.png',
-        size: new google.maps.Size(80, 80),
-        anchor: new google.maps.Point(0, 0),
-        origin: new google.maps.Point(0, 0),
-      }
+
     });
-
-    var loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
-    bounds.extend(loc);
-
-    map.panToBounds(bounds);
   }
 
   checkStatusFromServer() {

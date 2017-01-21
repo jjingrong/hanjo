@@ -22354,6 +22354,19 @@
 	        { className: 'animated fadeIn animated-fast', style: { maxWidth: screen.width, maxHeight: screen.height } },
 	        this.renderModal(),
 	        _react2.default.createElement('div', { id: 'map', style: { width: screen.width, height: topSize * 100 + 'vh' } }),
+	        _react2.default.createElement('img', { src: '/images/hanzoIcon.png',
+	          style: {
+	            position: 'absolute',
+	            left: '0',
+	            right: '0',
+	            height: '50px',
+	            width: '50px',
+	            top: '30%',
+	            margin: '0 auto',
+	            WebkitTransform: 'rotate(' + this.state.heading + 'deg)',
+	            transform: 'rotate(' + this.state.heading + 'deg)'
+	          }
+	        }),
 	        _react2.default.createElement(
 	          'div',
 	          { style: { height: '25vh' } },
@@ -22449,7 +22462,6 @@
 	          var compassHeading = 360 - currentOrientation.alpha;
 	          // Set compass heading to state
 	          _this3.setState({ heading: compassHeading });
-	          _this3.state.map.setHeading(compassHeading);
 	        });
 	      }).catch(function (errorMessage) {
 	        // Device Orientation Events are not supported
@@ -22474,29 +22486,19 @@
 	      var map = new google.maps.Map(document.getElementById('map'), {
 	        zoom: 15,
 	        center: hanzo,
-	        mapTypeId: 'roadmap'
+	        heading: 0
 	      });
 	
 	      var bounds = new google.maps.LatLngBounds();
 	
-	      map.setOptions({ draggable: false });
+	      map.setOptions({ draggable: false, zoomControl: false });
 	      this.setState({ map: map });
 	
 	      var marker = new google.maps.Marker({
 	        position: hanzo,
-	        map: map,
-	        icon: {
-	          url: '/images/hanzoIcon_small.png',
-	          size: new google.maps.Size(80, 80),
-	          anchor: new google.maps.Point(0, 0),
-	          origin: new google.maps.Point(0, 0)
-	        }
+	        map: map
+	
 	      });
-	
-	      var loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
-	      bounds.extend(loc);
-	
-	      map.panToBounds(bounds);
 	    }
 	  }, {
 	    key: 'checkStatusFromServer',
