@@ -19,6 +19,7 @@ export class SwipeArrowScreen  extends React.Component {
       modalIsOpen: false,
       arrowIsFlying: false,
       arrowStatusText: 'Traversing',
+      modalText: '',
       heading: 0,
       locationURL:"https://maps.googleapis.com/maps/api/staticmap?center="+this.props.latitude+','+this.props.longitude+"&zoom=15&size="+screen.width+"x"+(parseInt(screen.height*topSize))+"&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
     }
@@ -51,7 +52,7 @@ export class SwipeArrowScreen  extends React.Component {
         onRequestClose={this.closeModal}
         style={modalStyles}
       >
-        <p>You got shot by a pro genju.</p> 
+        <p>{this.state.modalText}</p> 
         <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
       </Modal>
     )
@@ -136,12 +137,17 @@ export class SwipeArrowScreen  extends React.Component {
             // dead, so we reset
             clearInterval(this.state.pollFunction);
             console.log('eliminated by', data.self_hit_by);
+            this.setState({
+              modalIsOpen:true,
+              modalText: 'eliminated by:' + data.self_hit_by
+            })
             // do dead things
           }
 
           if (data.arrow_hit) {
             // do arrow hit things like show eliminations
             console.log('eliminated', data.arrow_hit_at);
+            this.setState({arrowStatusText: 'Eliminated '+data.arrow_hit_at})
           }
         }
       }
