@@ -22366,8 +22366,8 @@
 	                width: '50px',
 	                top: '48%',
 	                margin: '0 auto',
-	                WebkitTransform: 'rotate(' + this.state.heading + 'deg)',
-	                transform: 'rotate(' + this.state.heading + 'deg)'
+	                WebkitTransform: 'rotate(' + (360 - this.state.heading) + 'deg)',
+	                transform: 'rotate(' + (360 - this.state.heading) + 'deg)'
 	              }
 	            })
 	          )
