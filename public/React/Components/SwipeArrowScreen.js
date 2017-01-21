@@ -45,7 +45,7 @@ export class SwipeArrowScreen  extends React.Component {
             right: '0',
             height: '50px',
             width: '50px',
-            top: '30%',
+            top: '33%',
             margin: '0 auto',
             WebkitTransform: 'rotate('+(this.state.heading)+'deg)',
             transform: 'rotate('+(this.state.heading)+'deg)',
@@ -156,7 +156,7 @@ export class SwipeArrowScreen  extends React.Component {
     );
 
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 15,
+      zoom: 17,
       center: hanzo,
       heading: 0
     });
@@ -166,11 +166,24 @@ export class SwipeArrowScreen  extends React.Component {
     map.setOptions({ draggable: false, zoomControl: false });
     this.setState({ map: map });
 
-    var marker = new google.maps.Marker({
+    var projectile = new google.maps.Marker({
       position: hanzo,
       map: map,
-
+      visible: true,
+      icon: {
+        //path: google.maps.SymbolPath.CIRCLE,
+        //scale: 6,
+        url: '/images/arrow.png',
+        scale: new google.maps.Size(50,50)
+        // fillColor: 'skyblue',
+        // fillOpacity: 0.9,
+        // strokeOpacity: 0.9,
+        // strokeWeight: 1.0,
+        // strokeColor: '#2f4f4f'
+      }
     });
+
+    this.setState({ projectile: projectile });
   }
 
   checkStatusFromServer() {
@@ -183,6 +196,11 @@ export class SwipeArrowScreen  extends React.Component {
       (data, status) => {
         console.log(data, status);
         if (status === 'success') {
+          // Move projectile
+          this.state.projectile.setVisible(true);
+          var newPos = new google.maps.LatLng(parseFloat(data.arrow_lat), parseFloat(data.arrow_lng));
+          this.state.projectile.setPosition(newPos);
+          console.log(data.arrow_lat, data.arrow_lng);
           if (data.self_hit) {
             // dead, so we reset
             clearInterval(this.state.pollFunction);
@@ -193,6 +211,7 @@ export class SwipeArrowScreen  extends React.Component {
               arrowIsFlying: false,
             })
             // do dead things
+            this.state.projectile.setVisible(false);
           }
 
           if (data.arrow_hit) {
@@ -200,6 +219,7 @@ export class SwipeArrowScreen  extends React.Component {
             console.log('eliminated', data.arrow_hit_at);
             var audio = new Audio('/sounds/kill.mp3');
             audio.play();
+            this.state.projectile.setVisible(false);
 
             this.setState({
               arrowStatusText: 'Eliminated '+ data.arrow_hit_at,
@@ -213,6 +233,7 @@ export class SwipeArrowScreen  extends React.Component {
           if (data.expired) {
             // do expired things
             console.log('expired you missed');
+            this.state.projectile.setVisible(false);
             this.setState({
               arrowStatusText: 'You missed, resetting arrow . . ',
             }, () => {

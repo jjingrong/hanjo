@@ -22361,7 +22361,7 @@
 	            right: '0',
 	            height: '50px',
 	            width: '50px',
-	            top: '30%',
+	            top: '33%',
 	            margin: '0 auto',
 	            WebkitTransform: 'rotate(' + this.state.heading + 'deg)',
 	            transform: 'rotate(' + this.state.heading + 'deg)'
@@ -22486,7 +22486,7 @@
 	      var hanzo = new google.maps.LatLng(parseFloat(this.props.latitude), parseFloat(this.props.longitude));
 	
 	      var map = new google.maps.Map(document.getElementById('map'), {
-	        zoom: 15,
+	        zoom: 17,
 	        center: hanzo,
 	        heading: 0
 	      });
@@ -22496,11 +22496,24 @@
 	      map.setOptions({ draggable: false, zoomControl: false });
 	      this.setState({ map: map });
 	
-	      var marker = new google.maps.Marker({
+	      var projectile = new google.maps.Marker({
 	        position: hanzo,
-	        map: map
-	
+	        map: map,
+	        visible: true,
+	        icon: {
+	          //path: google.maps.SymbolPath.CIRCLE,
+	          //scale: 6,
+	          url: '/images/arrow.png',
+	          scale: new google.maps.Size(50, 50)
+	          // fillColor: 'skyblue',
+	          // fillOpacity: 0.9,
+	          // strokeOpacity: 0.9,
+	          // strokeWeight: 1.0,
+	          // strokeColor: '#2f4f4f'
+	        }
 	      });
+	
+	      this.setState({ projectile: projectile });
 	    }
 	  }, {
 	    key: 'checkStatusFromServer',
@@ -22514,6 +22527,11 @@
 	      }, function (data, status) {
 	        console.log(data, status);
 	        if (status === 'success') {
+	          // Move projectile
+	          _this4.state.projectile.setVisible(true);
+	          var newPos = new google.maps.LatLng(parseFloat(data.arrow_lat), parseFloat(data.arrow_lng));
+	          _this4.state.projectile.setPosition(newPos);
+	          console.log(data.arrow_lat, data.arrow_lng);
 	          if (data.self_hit) {
 	            // dead, so we reset
 	            clearInterval(_this4.state.pollFunction);
@@ -22524,6 +22542,7 @@
 	              arrowIsFlying: false
 	            });
 	            // do dead things
+	            _this4.state.projectile.setVisible(false);
 	          }
 	
 	          if (data.arrow_hit) {
@@ -22531,6 +22550,7 @@
 	            console.log('eliminated', data.arrow_hit_at);
 	            var audio = new Audio('/sounds/kill.mp3');
 	            audio.play();
+	            _this4.state.projectile.setVisible(false);
 	
 	            _this4.setState({
 	              arrowStatusText: 'Eliminated ' + data.arrow_hit_at
@@ -22544,6 +22564,7 @@
 	          if (data.expired) {
 	            // do expired things
 	            console.log('expired you missed');
+	            _this4.state.projectile.setVisible(false);
 	            _this4.setState({
 	              arrowStatusText: 'You missed, resetting arrow . . '
 	            }, function () {

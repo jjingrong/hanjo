@@ -44,11 +44,8 @@ router.get('/get-status', function(req, res) {
       self_hit_by: status1.by,
       arrow_hit: status2.hit,
       arrow_hit_at: status2.at,
-    };
-
-    if (status.arrow_hit) {
-      status.arrow_hit_lat = status2.arrow_lat;
-      status.arrow_hit_lng = status2.arrow_lng;
+      arrow_lat: status2.arrow_lat || 0,
+      arrow_lng: status2.arrow_lng || 0
     }
 
     if (status2.expired) {
@@ -63,8 +60,8 @@ router.get('/get-status', function(req, res) {
 });
 
 var arrowGroup = {};
-const HIT_DIST = 0.02; // 20m range
-const SPEED_DIST = 0.002 // 7m/sec
+const HIT_DIST = 0.03; // 30m range
+const SPEED_DIST = 0.01 // 10m/sec
 
 function addArrow(usernameid, lat, lng, heading) {
   arrowGroup[usernameid] = {
@@ -93,7 +90,7 @@ function processingLoop() {
     arrow.lng = newLatLng[1];
     arrow.count += 1;
 
-    if (arrow.count > 60) {
+    if (arrow.count > 90) {
       arrow.expired = true;
     }
   }
@@ -122,7 +119,9 @@ function checkArrowHitTarget(usernameid) {
     return { hit: true, at: arrow.at, arrow_lat: arrow.lat, arrow_lng: arrow.lng };
   } else if (arrow && arrow.expired) {
     delete arrowGroup[usernameid];
-    return { hit: false, at: null, expired: true };
+    return { hit: false, at: null, arrow_lat: arrow.lat, arrow_lng: arrow.lng, expired: true };
+  } else if (arrow) {
+    return { hit: false, at: null, arrow_lat: arrow.lat, arrow_lng: arrow.lng };
   } else {
     return { hit: false, at: null };
   }
