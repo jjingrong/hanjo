@@ -89,7 +89,7 @@ export class SwipeArrowScreen  extends React.Component {
     } else {
       return (
         <div className='animated fadeIn' id='shootButton' style={styleSheet.button} onClick={this.launchArrow.bind(this)}>
-          {this.state.heading}
+          Shoot @ {this.state.heading.toFixed(2)}
         </div>
       )
     }
@@ -176,7 +176,7 @@ export class SwipeArrowScreen  extends React.Component {
             }, () => {
               setTimeout(() => {
                 this.setState({arrowIsFlying: false, arrowStatusText: 'Traversing'})
-              }, 3000)
+              }, 5000)
             });
           }
 

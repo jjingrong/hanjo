@@ -22422,7 +22422,8 @@
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'animated fadeIn', id: 'shootButton', style: styleSheet.button, onClick: this.launchArrow.bind(this) },
-	          this.state.heading
+	          'Shoot @ ',
+	          this.state.heading.toFixed(2)
 	        );
 	      }
 	    }
@@ -22514,7 +22515,7 @@
 	            }, function () {
 	              setTimeout(function () {
 	                _this4.setState({ arrowIsFlying: false, arrowStatusText: 'Traversing' });
-	              }, 3000);
+	              }, 5000);
 	            });
 	          }
 	
