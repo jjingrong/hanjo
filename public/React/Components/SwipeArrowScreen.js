@@ -61,7 +61,8 @@ export class SwipeArrowScreen  extends React.Component {
 
   respawn() {
     this.closeModal()
-    //TODO logic to restart interval to check death
+    //restart interval
+    this.setupServerConnection();
   }
 
   renderArrowStatus() {
@@ -92,7 +93,6 @@ export class SwipeArrowScreen  extends React.Component {
       (data, status) => {
         if (status === 'success') {
           if (!this.state.arrowIsFlying) {
-            console.log('lol');
             this.setState({arrowIsFlying: true});
             this.setupServerConnection();
           }
@@ -109,13 +109,13 @@ export class SwipeArrowScreen  extends React.Component {
     promise.then((deviceOrientation) => { // Device Orientation Events are supported
       // Register a callback to run every time a new
       // deviceorientation event is fired by the browser.
-      deviceOrientation.listen(function() {
+      deviceOrientation.listen(() => {
         // Get the current *screen-adjusted* device orientation angles
         var currentOrientation = deviceOrientation.getScreenAdjustedEuler();
         // Calculate the current compass heading that the user is 'looking at' (in degrees)
         var compassHeading = 360 - currentOrientation.alpha;
         // Set compass heading to state
-        this.state.heading = compassHeading;
+        this.setState({ heading: compassHeading });
       });
 
     }).catch(function(errorMessage) { // Device Orientation Events are not supported
@@ -127,7 +127,9 @@ export class SwipeArrowScreen  extends React.Component {
     if (this.state.pollFunction) {
       clearInterval(this.state.pollFunction);
     }
-    this.state.pollFunction = setInterval(this.checkStatusFromServer.bind(this), 1000);
+    var func = setInterval(this.checkStatusFromServer.bind(this), 1000);
+
+    this.setState({ pollFunction: func });
   }
 
   checkStatusFromServer() {
@@ -159,6 +161,11 @@ export class SwipeArrowScreen  extends React.Component {
               arrowStatusText: 'Eliminated '+ data.arrow_hit_at,
               arrowIsFlying: false
             });
+          }
+
+          if (data.expired) {
+            // do expired things
+            console.log('expired you missed');
           }
         }
       }

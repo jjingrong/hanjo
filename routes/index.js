@@ -51,6 +51,10 @@ router.get('/get-status', function(req, res) {
       status.arrow_hit_lng = status2.arrow_lng;
     }
 
+    if (status2.expired) {
+      status.expired = true;
+    }
+
     res.send(status);
   } else {
     res.send('error');
@@ -59,8 +63,8 @@ router.get('/get-status', function(req, res) {
 });
 
 var arrowGroup = {};
-const HIT_DIST = 0.03; // 30m range
-const SPEED_DIST = 0.005 // 5m/sec
+const HIT_DIST = 0.02; // 20m range
+const SPEED_DIST = 0.007 // 7m/sec
 
 function addArrow(usernameid, lat, lng, heading) {
   arrowGroup[usernameid] = {
@@ -68,17 +72,30 @@ function addArrow(usernameid, lat, lng, heading) {
     lng: lng,
     heading: heading,
     hit: false,
+    count: 0,
+    expired: false
   };
 }
 
 function processingLoop() {
   for (var key in arrowGroup) {
     var arrow = arrowGroup[key]
+    var dist = SPEED_DIST;
 
-    var newLatLng = calculateLatLng(arrow.lat, arrow.lng, arrow.heading, SPEED_DIST);
+    if (arrow.count === 0) {
+      // HACK: Initial Burst to prevent hitting behind
+      dist = HIT_DIST * 1.2;
+    }
+
+    var newLatLng = calculateLatLng(arrow.lat, arrow.lng, arrow.heading, dist);
 
     arrow.lat = newLatLng[0];
     arrow.lng = newLatLng[1];
+    arrow.count += 1;
+
+    if (arrow.count > 60) {
+      arrow.expired = true;
+    }
   }
 }
 
@@ -100,14 +117,17 @@ function checkArrowsHitSelf(usernameid, targetLat, targetLng) {
 
 function checkArrowHitTarget(usernameid) {
   var arrow = arrowGroup[usernameid];
-  console.log(arrow);
   if (arrow && arrow.hit) {
     delete arrowGroup[usernameid];
     return { hit: true, at: arrow.at, arrow_lat: arrow.lat, arrow_lng: arrow.lng };
+  } else if (arrow && arrow.expired) {
+    delete arrowGroup[usernameid];
+    return { hit: false, at: null, expired: true };
   } else {
     return { hit: false, at: null };
   }
 }
+
 Number.prototype.toRad = function() {
    return this * Math.PI / 180;
 }

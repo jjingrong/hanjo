@@ -22390,7 +22390,8 @@
 	    key: 'respawn',
 	    value: function respawn() {
 	      this.closeModal();
-	      //TODO logic to restart interval to check death
+	      //restart interval
+	      this.setupServerConnection();
 	    }
 	  }, {
 	    key: 'renderArrowStatus',
@@ -22423,7 +22424,6 @@
 	      }, function (data, status) {
 	        if (status === 'success') {
 	          if (!_this2.state.arrowIsFlying) {
-	            console.log('lol');
 	            _this2.setState({ arrowIsFlying: true });
 	            _this2.setupServerConnection();
 	          }
@@ -22433,6 +22433,8 @@
 	  }, {
 	    key: 'setupDeviceCompass',
 	    value: function setupDeviceCompass() {
+	      var _this3 = this;
+	
 	      // Obtain a new *world-oriented* Full Tilt JS DeviceOrientation Promise
 	      var promise = FULLTILT.getDeviceOrientation({ 'type': 'world' });
 	
@@ -22447,7 +22449,7 @@
 	          // Calculate the current compass heading that the user is 'looking at' (in degrees)
 	          var compassHeading = 360 - currentOrientation.alpha;
 	          // Set compass heading to state
-	          this.state.heading = compassHeading;
+	          _this3.setState({ heading: compassHeading });
 	        });
 	      }).catch(function (errorMessage) {
 	        // Device Orientation Events are not supported
@@ -22460,12 +22462,14 @@
 	      if (this.state.pollFunction) {
 	        clearInterval(this.state.pollFunction);
 	      }
-	      this.state.pollFunction = setInterval(this.checkStatusFromServer.bind(this), 1000);
+	      var func = setInterval(this.checkStatusFromServer.bind(this), 1000);
+	
+	      this.setState({ pollFunction: func });
 	    }
 	  }, {
 	    key: 'checkStatusFromServer',
 	    value: function checkStatusFromServer() {
-	      var _this3 = this;
+	      var _this4 = this;
 	
 	      $.get("/get-status", {
 	        lat: this.props.latitude,
@@ -22476,9 +22480,9 @@
 	        if (status === 'success') {
 	          if (data.self_hit) {
 	            // dead, so we reset
-	            clearInterval(_this3.state.pollFunction);
+	            clearInterval(_this4.state.pollFunction);
 	            console.log('eliminated by', data.self_hit_by);
-	            _this3.setState({
+	            _this4.setState({
 	              modalIsOpen: true,
 	              modalText: 'eliminated by:' + data.self_hit_by,
 	              arrowIsFlying: false
@@ -22489,10 +22493,15 @@
 	          if (data.arrow_hit) {
 	            // do arrow hit things like show eliminations
 	            console.log('eliminated', data.arrow_hit_at);
-	            _this3.setState({
+	            _this4.setState({
 	              arrowStatusText: 'Eliminated ' + data.arrow_hit_at,
 	              arrowIsFlying: false
 	            });
+	          }
+	
+	          if (data.expired) {
+	            // do expired things
+	            console.log('expired you missed');
 	          }
 	        }
 	      });
