@@ -53,7 +53,7 @@ export class SwipeArrowScreen  extends React.Component {
         style={modalStyles}
         contentLabel="Modal"
       >
-        <p>{this.state.modalText}</p> 
+        <p id='modalStatusText'>{this.state.modalText}</p> 
         <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
       </Modal>
     )
@@ -124,7 +124,6 @@ export class SwipeArrowScreen  extends React.Component {
   }
 
   checkStatusFromServer() {
-    console.log('don this');
     $.get("/get-status",
       {
         lat: this.props.latitude,
@@ -140,7 +139,7 @@ export class SwipeArrowScreen  extends React.Component {
             console.log('eliminated by', data.self_hit_by);
             this.setState({
               modalIsOpen:true,
-              modalText: 'eliminated by:' + data.self_hit_by
+              modalText: 'Eliminated by:' + data.self_hit_by
             })
             // do dead things
           }

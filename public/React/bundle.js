@@ -22376,7 +22376,7 @@
 	        },
 	        _react2.default.createElement(
 	          'p',
-	          null,
+	          { id: 'modalStatusText' },
 	          this.state.modalText
 	        ),
 	        _react2.default.createElement(
@@ -22460,7 +22460,6 @@
 	    value: function checkStatusFromServer() {
 	      var _this3 = this;
 	
-	      console.log('don this');
 	      $.get("/get-status", {
 	        lat: this.props.latitude,
 	        lng: this.props.longitude,
@@ -22474,7 +22473,7 @@
 	            console.log('eliminated by', data.self_hit_by);
 	            _this3.setState({
 	              modalIsOpen: true,
-	              modalText: 'eliminated by:' + data.self_hit_by
+	              modalText: 'Eliminated by:' + data.self_hit_by
 	            });
 	            // do dead things
 	          }
