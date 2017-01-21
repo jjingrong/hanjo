@@ -11,6 +11,7 @@ export class SwipeArrowScreen  extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      arrowIsFlying: false,
     }
   }
   
@@ -24,10 +25,20 @@ export class SwipeArrowScreen  extends React.Component {
         <div style={{height:'75vh', backgroundColor:'yellow'}}>
         </div>
         <div style={{height:'25vh'}}>
-          <input className='animated fadeIn' id='shootButton' value="Shoot" style={styleSheet.button}/>
+          {this.renderArrowStatus()}
         </div>
       </div>
     )
+  }
+  
+  renderArrowStatus() {
+    if (this.state.arrowIsFlying) {
+      
+    } else {
+      return (
+        <input className='animated fadeIn' id='shootButton' value="Shoot" style={styleSheet.button}/>
+      )
+    }
   }
 }
 
