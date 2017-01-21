@@ -125,7 +125,7 @@ export class SwipeArrowScreen  extends React.Component {
           }
         }
       );
-    }, 2000)
+    }, 2500)
   }
 
   setupDeviceCompass() {
