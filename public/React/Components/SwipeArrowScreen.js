@@ -101,22 +101,24 @@ export class SwipeArrowScreen  extends React.Component {
 
     this.state.ryugaAudio.play();
     // Send api to launch
-    $.post("/shoot-arrow",
-      {
-        lat: this.props.latitude,
-        lng: this.props.longitude,
-        heading: this.state.heading,
-        username: this.props.username,
-      },
-      (data, status) => {
-        if (status === 'success') {
-          if (!this.state.arrowIsFlying) {
-            this.setState({arrowIsFlying: true});
-            this.setupServerConnection();
+    setTimeout(() => {
+      $.post("/shoot-arrow",
+        {
+          lat: this.props.latitude,
+          lng: this.props.longitude,
+          heading: this.state.heading,
+          username: this.props.username,
+        },
+        (data, status) => {
+          if (status === 'success') {
+            if (!this.state.arrowIsFlying) {
+              this.setState({arrowIsFlying: true});
+              this.setupServerConnection();
+            }
           }
         }
-      }
-    );
+      );
+    }, 2000)
   }
 
   setupDeviceCompass() {

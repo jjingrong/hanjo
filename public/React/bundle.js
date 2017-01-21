@@ -22431,19 +22431,21 @@
 	
 	      this.state.ryugaAudio.play();
 	      // Send api to launch
-	      $.post("/shoot-arrow", {
-	        lat: this.props.latitude,
-	        lng: this.props.longitude,
-	        heading: this.state.heading,
-	        username: this.props.username
-	      }, function (data, status) {
-	        if (status === 'success') {
-	          if (!_this2.state.arrowIsFlying) {
-	            _this2.setState({ arrowIsFlying: true });
-	            _this2.setupServerConnection();
+	      setTimeout(function () {
+	        $.post("/shoot-arrow", {
+	          lat: _this2.props.latitude,
+	          lng: _this2.props.longitude,
+	          heading: _this2.state.heading,
+	          username: _this2.props.username
+	        }, function (data, status) {
+	          if (status === 'success') {
+	            if (!_this2.state.arrowIsFlying) {
+	              _this2.setState({ arrowIsFlying: true });
+	              _this2.setupServerConnection();
+	            }
 	          }
-	        }
-	      });
+	        });
+	      }, 2000);
 	    }
 	  }, {
 	    key: 'setupDeviceCompass',
