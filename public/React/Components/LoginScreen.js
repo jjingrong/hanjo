@@ -30,7 +30,7 @@ export class LoginScreen extends React.Component {
                   <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>  
                 </p>
                 <p style={{marginTop:'25px'}}>
-                  <input type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>
+                  <input className='animated fadeInUp' type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>
                 </p>
               </div>
             </fieldset>
