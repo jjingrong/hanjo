@@ -51,6 +51,7 @@ export class SwipeArrowScreen  extends React.Component {
         isOpen={this.state.modalIsOpen}
         onRequestClose={this.closeModal}
         style={modalStyles}
+        contentLabel="Modal"
       >
         <p>{this.state.modalText}</p> 
         <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
@@ -66,7 +67,7 @@ export class SwipeArrowScreen  extends React.Component {
   renderArrowStatus() {
     if (this.state.arrowIsFlying) {
       return (
-        <div id='arrowStatusText' className='animated fadeInLeft animated-fast'>
+        <div id='arrowStatusText' className='animated-fast animated fadeInUp'>
           {this.state.arrowStatusText}
         </div>
       )
@@ -166,9 +167,9 @@ const styleSheet = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    webkitDisplay: 'flex',
-    webkitAlignItems: 'center',
-    webkitJustifyContent: 'center',
+    WebkitDisplay: 'flex',
+    WebkitAlignItems: 'center',
+    WebkitJustifyContent: 'center',
     position: 'absolute',
     bottom: '0',
     width: '90%',
@@ -197,8 +198,8 @@ const modalStyles = {
     borderRadius          : '4px',
     display               :'flex',
     justifyContent        :'center',
-    webkitDisplay         : 'flex',
-    webkitJustifyContent  : 'center',
+    WebkitDisplay         : 'flex',
+    WebkitJustifyContent  : 'center',
     height                :'30vh',
   }
 };
