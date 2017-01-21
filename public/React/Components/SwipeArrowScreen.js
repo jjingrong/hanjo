@@ -166,6 +166,13 @@ export class SwipeArrowScreen  extends React.Component {
           if (data.expired) {
             // do expired things
             console.log('expired you missed');
+            this.setState({
+              arrowStatusText: 'You missed, resetting arrow . . ',
+            }, () => {
+              setTimeout(() => {
+                this.setState({arrowIsFlying: false})
+              }, 3000)
+            });
           }
         }
       }

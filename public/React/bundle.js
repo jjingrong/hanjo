@@ -22502,6 +22502,13 @@
 	          if (data.expired) {
 	            // do expired things
 	            console.log('expired you missed');
+	            _this4.setState({
+	              arrowStatusText: 'You missed, resetting arrow . . '
+	            }, function () {
+	              setTimeout(function () {
+	                _this4.setState({ arrowIsFlying: false });
+	              }, 3000);
+	            });
 	          }
 	        }
 	      });
