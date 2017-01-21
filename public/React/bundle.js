@@ -22332,7 +22332,7 @@
 	      arrowStatusText: 'Traversing',
 	      modalText: '',
 	      heading: 0,
-	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + parseInt(screen.height * topSize) + "x" + parseInt(screen.height * topSize) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
+	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + parseInt(screen.height * topSize + screen.width) + "x" + parseInt(screen.height * topSize + screen.width) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
 	    };
 	    return _this;
 	  }
@@ -22371,7 +22371,9 @@
 	                height: '50px',
 	                width: '50px',
 	                top: '48%',
-	                margin: '0 auto'
+	                margin: '0 auto',
+	                WebkitTransform: 'rotate(' + this.state.heading + 'deg)',
+	                transform: 'rotate(' + this.state.heading + 'deg)'
 	              }
 	            })
 	          )
