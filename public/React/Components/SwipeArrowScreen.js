@@ -71,7 +71,7 @@ export class SwipeArrowScreen  extends React.Component {
         contentLabel="Modal"
       >
         <p id='modalStatusText'>{this.state.modalText}</p>
-        <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
+        <div id='respawnButton' style={styleSheet.respawnButton} onClick={this.respawn.bind(this)}>Respawn</div>
       </Modal>
     )
   }
@@ -268,6 +268,17 @@ const styleSheet = {
     bottom: '0',
     width: '90%',
     marginLeft: '5%',
+  },
+  respawnButton : {
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    WebkitDisplay: 'flex',
+    WebkitAlignItems: 'center',
+    WebkitJustifyContent: 'center',
+    position: 'absolute',
+    bottom: '0',
   },
 }
 
