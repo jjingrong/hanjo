@@ -97,18 +97,10 @@ export class LoginScreen extends React.Component {
 const styleSheet = {
   invalidLoginButton: {
     backgroundColor: 'grey',
-    position: 'absolute',
-    bottom: '0',
-    width: '100vw',
     marginBottom: '0px',
-    'marginLeft': '-17%'
   },
   loginButton : {
-    position: 'absolute',
-    bottom: '0',
-    width: '100vw',
     marginBottom: '0px',
-    'marginLeft': '-17%'
   },
   hanjoText: {
     textAlign: 'center',
