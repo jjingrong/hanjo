@@ -103,6 +103,9 @@ export class SwipeArrowScreen  extends React.Component {
   }
 
   launchArrow() {
+
+    var audio = new Audio('/sounds/ult.mp3');
+            audio.play();
     // Send api to launch
     $.post("/shoot-arrow",
       {
@@ -178,6 +181,9 @@ export class SwipeArrowScreen  extends React.Component {
           if (data.arrow_hit) {
             // do arrow hit things like show eliminations
             console.log('eliminated', data.arrow_hit_at);
+            var audio = new Audio('/sounds/kill.mp3');
+            audio.play();
+
             this.setState({
               arrowStatusText: 'Eliminated '+ data.arrow_hit_at,
             }, () => {

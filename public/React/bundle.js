@@ -22440,6 +22440,8 @@
 	    value: function launchArrow() {
 	      var _this2 = this;
 	
+	      var audio = new Audio('/sounds/ult.mp3');
+	      audio.play();
 	      // Send api to launch
 	      $.post("/shoot-arrow", {
 	        lat: this.props.latitude,
@@ -22518,6 +22520,9 @@
 	          if (data.arrow_hit) {
 	            // do arrow hit things like show eliminations
 	            console.log('eliminated', data.arrow_hit_at);
+	            var audio = new Audio('/sounds/kill.mp3');
+	            audio.play();
+	
 	            _this4.setState({
 	              arrowStatusText: 'Eliminated ' + data.arrow_hit_at
 	            }, function () {
