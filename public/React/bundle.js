@@ -22332,7 +22332,7 @@
 	      arrowStatusText: 'Traversing',
 	      modalText: '',
 	      heading: 0,
-	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + screen.width + "x" + parseInt(screen.height * topSize) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
+	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + parseInt(screen.height * topSize) + "x" + parseInt(screen.height * topSize) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
 	    };
 	    return _this;
 	  }
