@@ -22442,7 +22442,7 @@
 	      $.post("/shoot-arrow", info, function (data, status) {
 	        if (status === 'success') {
 	          _this2.setState({ arrowHeading: info.heading });
-	          var angle = parseInt(info.heading / 45) * 45;
+	          var angle = parseInt(info.heading / 45) * 45 % 360;
 	          _this2.state.projectile.setIcon({
 	            url: '/images/arrow_' + angle.toString() + '.png',
 	            scale: new google.maps.Size(50, 50)

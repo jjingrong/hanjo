@@ -112,7 +112,7 @@ export class SwipeArrowScreen  extends React.Component {
       (data, status) => {
         if (status === 'success') {
           this.setState({ arrowHeading: info.heading });
-          var angle = parseInt(info.heading / 45) * 45;
+          var angle = (parseInt(info.heading / 45) * 45) % 360;
           this.state.projectile.setIcon({
               url: '/images/arrow_'+angle.toString()+'.png',
               scale: new google.maps.Size(50,50),
