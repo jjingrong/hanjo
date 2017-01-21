@@ -22371,7 +22371,8 @@
 	        {
 	          isOpen: this.state.modalIsOpen,
 	          onRequestClose: this.closeModal,
-	          style: modalStyles
+	          style: modalStyles,
+	          contentLabel: 'Modal'
 	        },
 	        _react2.default.createElement(
 	          'p',
@@ -22397,7 +22398,7 @@
 	      if (this.state.arrowIsFlying) {
 	        return _react2.default.createElement(
 	          'div',
-	          { id: 'arrowStatusText', className: 'animated fadeInLeft animated-fast' },
+	          { id: 'arrowStatusText', className: 'animated-fast animated fadeInUp' },
 	          this.state.arrowStatusText
 	        );
 	      } else {
@@ -22512,6 +22513,9 @@
 	    display: 'flex',
 	    alignItems: 'center',
 	    justifyContent: 'center',
+	    WebkitDisplay: 'flex',
+	    WebkitAlignItems: 'center',
+	    WebkitJustifyContent: 'center',
 	    position: 'absolute',
 	    bottom: '0',
 	    width: '90%',
@@ -22540,6 +22544,8 @@
 	    borderRadius: '4px',
 	    display: 'flex',
 	    justifyContent: 'center',
+	    WebkitDisplay: 'flex',
+	    WebkitJustifyContent: 'center',
 	    height: '30vh'
 	  }
 	};
