@@ -18,7 +18,7 @@ export class LoginScreen extends React.Component {
     return (
       <div className="container">
         <div id="login">
-          <form action="javascript:void(0);" method="get">
+          <form onSubmit={this.handleSubmit.bind(this)} method="get">
             <fieldset className="clearfix">
               <div id='loginFormContainer'>
                 <div>
@@ -30,7 +30,7 @@ export class LoginScreen extends React.Component {
                   <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>  
                 </p>
                 <p style={{marginTop:'25px'}}>
-                  <input type="submit" value="Step into the dojo" style={styleSheet.loginButton} onClick={this.handleSubmit.bind(this)}/>
+                  <input type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>
                 </p>
               </div>
             </fieldset>
@@ -44,7 +44,8 @@ export class LoginScreen extends React.Component {
     this.setState({usernameInput: event.target.value});
   }
   
-  handleSubmit() {
+  handleSubmit(event) {
+    event.preventDefault();
     this.props.setUsername(this.state.usernameInput)
   }
   
@@ -54,7 +55,9 @@ const styleSheet = {
   loginButton : {
     position: 'absolute',
     bottom: '0',
-    width: '100%'
+    width: '100vw',
+    marginBottom: '0px',
+    'marginLeft': '-17%'
   },
   hanjoText: {
     textAlign: 'center',
