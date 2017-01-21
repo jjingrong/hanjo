@@ -22510,8 +22510,11 @@
 	            // do arrow hit things like show eliminations
 	            console.log('eliminated', data.arrow_hit_at);
 	            _this4.setState({
-	              arrowStatusText: 'Eliminated ' + data.arrow_hit_at,
-	              arrowIsFlying: false
+	              arrowStatusText: 'Eliminated ' + data.arrow_hit_at
+	            }, function () {
+	              setTimeout(function () {
+	                _this4.setState({ arrowIsFlying: false, arrowStatusText: 'Traversing' });
+	              }, 3000);
 	            });
 	          }
 	
@@ -22522,7 +22525,7 @@
 	              arrowStatusText: 'You missed, resetting arrow . . '
 	            }, function () {
 	              setTimeout(function () {
-	                _this4.setState({ arrowIsFlying: false });
+	                _this4.setState({ arrowIsFlying: false, arrowStatusText: 'Traversing' });
 	              }, 3000);
 	            });
 	          }

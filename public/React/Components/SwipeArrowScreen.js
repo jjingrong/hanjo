@@ -173,7 +173,10 @@ export class SwipeArrowScreen  extends React.Component {
             console.log('eliminated', data.arrow_hit_at);
             this.setState({
               arrowStatusText: 'Eliminated '+ data.arrow_hit_at,
-              arrowIsFlying: false
+            }, () => {
+              setTimeout(() => {
+                this.setState({arrowIsFlying: false, arrowStatusText: 'Traversing'})
+              }, 3000)
             });
           }
 
@@ -184,7 +187,7 @@ export class SwipeArrowScreen  extends React.Component {
               arrowStatusText: 'You missed, resetting arrow . . ',
             }, () => {
               setTimeout(() => {
-                this.setState({arrowIsFlying: false})
+                this.setState({arrowIsFlying: false, arrowStatusText: 'Traversing'})
               }, 3000)
             });
           }
