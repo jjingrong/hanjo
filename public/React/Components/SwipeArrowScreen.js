@@ -46,8 +46,6 @@ export class SwipeArrowScreen  extends React.Component {
                 width: '50px',
                 top: '48%',
                 margin: '0 auto',
-                WebkitTransform: 'rotate('+(360-this.state.heading)+'deg)',
-                transform: 'rotate('+(360-this.state.heading)+'deg)',
               }}
               />
           </div>
