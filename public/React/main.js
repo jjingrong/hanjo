@@ -32,6 +32,7 @@ class MainPanel extends React.Component {
   
   setUsername(username) {
     this.setState({username: username})
+    console.log('Username set! It is: ' + username)
   }
   
 }

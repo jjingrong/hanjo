@@ -6,7 +6,7 @@ export class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      usernameInput: null
+      usernameInput: ''
     }
   }
   
@@ -22,9 +22,12 @@ export class LoginScreen extends React.Component {
             <fieldset className="clearfix">
               <div id='loginFormContainer'>
                 <img height='auto' width='80%' style={{marginLeft:'10%'}} src={"/images/HanzoPixel.png"} />
-                <p><span className="fontawesome-user"></span><input type="text" value="Username" onBlur="if(this.value == '') this.value = 'Username'" onFocus="if(this.value == 'Username') this.value = ''" required/></p>
+                <p>
+                  <span className="fontawesome-user"></span>
+                  <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>  
+                </p>
                 <p style={{marginTop:'25px'}}>
-                  <input type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>
+                  <input type="submit" value="Step into the dojo" style={styleSheet.loginButton} onClick={this.handleSubmit.bind(this)}/>
                 </p>
               </div>
             </fieldset>
@@ -34,9 +37,14 @@ export class LoginScreen extends React.Component {
     )
   }
   
-  setUsername(usernameInput) {
-    this.setState({usernameInput: usernameInput})
+  handleChange(event) {
+    this.setState({usernameInput: event.target.value});
   }
+  
+  handleSubmit() {
+    this.props.setUsername(this.state.usernameInput)
+  }
+  
 }
 
 const styleSheet = {
