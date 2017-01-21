@@ -8,26 +8,40 @@ router.get('/', function(req, res, next) {
 
 router.post('/shoot-arrow', function(req, res) {
   // get lat, lng, username and heading
-  var lat = req.param('lat');
-  var lng = req.param('lng');
-  var usernameid = req.param('username');
-  var heading = req.param('heading');
-
-  addArrow(usernameid, lat, lng, heading);
-
-  // respond with success
-  res.send('done');
+  var lat = req.body.lat;
+  var lng = req.body.lng;
+  var usernameid = req.body.username;
+  var heading = req.body.heading;
+  if (typeof lat != 'undefined' &&
+    typeof lng != 'undefined' &&
+    typeof usernameid != 'undefined' &&
+    typeof heading != 'undefined'
+  ) {
+    addArrow(usernameid, parseFloat(lat), parseFloat(lng), parseInt(heading));
+    console.log('added arrow');
+    res.send('done');
+  } else {
+    console.log('error adding arrow');
+    res.send('error');
+  }
 });
 
 router.get('/get-status', function(req, res) {
   // get lat, lng, username
-  var lat = req.param('lat');
-  var lng = req.param('lng');
-  var usernameid = req.param('username');
+  var lat = req.query.lat;
+  var lng = req.query.lng;
+  var usernameid = req.query.username;
 
-  var status = checkArrowsHitTarget(lat, lng);
+  if (typeof lat != 'undefined' &&
+    typeof lng != 'undefined' &&
+    typeof usernameid != 'undefined'
+  ) {
+    var status = checkArrowsHitTarget(parseFloat(lat), parseFloat(lng));
+    res.send(status);
+  } else {
+    res.send('error');
+  }
 
-  res.send(status);
 });
 
 var arrowGroup = {};
@@ -41,6 +55,7 @@ function addArrow(usernameid, lat, lng, heading) {
 }
 
 function processingLoop() {
+  console.log('processing...');
   for (var key in arrowGroup) {
     var arrow = arrowGroup[key]
 
@@ -49,6 +64,7 @@ function processingLoop() {
     arrow.lat = newLatLng[0];
     arrow.lng = newLatLng[1];
   }
+  console.log('loop finished.');
 }
 
 function checkArrowsHitTarget(targetLat, targetLng) {
@@ -75,7 +91,7 @@ function calculateLatLng(lat, lng, brng, dist) {
  dist = dist / 6371;
  brng = brng.toRad();
 
- var lat1 = lat.toRad(), lng = lng1.toRad();
+ var lat1 = lat.toRad(), lng1 = lng.toRad();
 
  var lat2 = Math.asin(Math.sin(lat1) * Math.cos(dist) +
                       Math.cos(lat1) * Math.sin(dist) * Math.cos(brng));
@@ -85,7 +101,7 @@ function calculateLatLng(lat, lng, brng, dist) {
                               Math.cos(dist) - Math.sin(lat1) *
                               Math.sin(lat2));
 
- if (isNaN(lat2) || isNaN(lon2)) return null;
+ if (isNaN(lat2) || isNaN(lng2)) return null;
 
  return [lat2.toDeg(), lng2.toDeg()];
 }
@@ -104,5 +120,7 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
 
 	return dist;
 }
+
+setInterval(processingLoop, 1000);
 
 module.exports = router;
