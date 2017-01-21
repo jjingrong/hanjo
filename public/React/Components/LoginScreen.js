@@ -21,7 +21,10 @@ export class LoginScreen extends React.Component {
           <form action="javascript:void(0);" method="get">
             <fieldset className="clearfix">
               <div id='loginFormContainer'>
-                <img height='auto' width='80%' style={{marginLeft:'10%'}} src={"/images/HanzoPixel.png"} />
+                <div>
+                  <img height='auto' width='80%' style={{marginLeft:'10%'}} src={"/images/HanzoPixel.png"} />
+                  <div style={styleSheet.hanjoText}>iHanjo</div>
+                </div>
                 <p>
                   <span className="fontawesome-user"></span>
                   <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>  
@@ -52,5 +55,10 @@ const styleSheet = {
     position: 'absolute',
     bottom: '0',
     width: '100%'
+  },
+  hanjoText: {
+    textAlign: 'center',
+    color: 'whitesmoke',
+    fontSize: '18px'
   }
 }
