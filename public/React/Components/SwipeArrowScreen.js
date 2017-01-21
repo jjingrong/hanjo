@@ -24,6 +24,7 @@ export class SwipeArrowScreen  extends React.Component {
 
   componentDidMount() {
     this.setupDeviceCompass();
+    this.setupServerConnection();
   }
 
   render() {
@@ -58,9 +59,19 @@ export class SwipeArrowScreen  extends React.Component {
 
   launchArrow() {
     // Send api to launch
-
-    this.setState({arrowIsFlying: true})
-    // Start listening to arrow events
+    $.post("/shoot-arrow",
+      {
+        lat: this.props.latitude,
+        lng: this.props.longitude,
+        heading: this.state.heading,
+        username: this.props.username,
+      },
+      (data, status) => {
+        if (status === 'success') {
+          this.setState({arrowIsFlying: true})
+        }
+      }
+    );
   }
 
   setupDeviceCompass() {
@@ -68,7 +79,7 @@ export class SwipeArrowScreen  extends React.Component {
     var promise = FULLTILT.getDeviceOrientation({ 'type': 'world' });
 
     // Wait for Promise result
-    promise.then(function(deviceOrientation) { // Device Orientation Events are supported
+    promise.then((deviceOrientation) => { // Device Orientation Events are supported
       // Register a callback to run every time a new
       // deviceorientation event is fired by the browser.
       deviceOrientation.listen(function() {
@@ -83,6 +94,38 @@ export class SwipeArrowScreen  extends React.Component {
     }).catch(function(errorMessage) { // Device Orientation Events are not supported
       console.log(errorMessage);
     });
+  }
+
+  setupServerConnection() {
+    this.state.pollFunction = setInterval(this.checkStatusFromServer.bind(this), 1000);
+  }
+
+  checkStatusFromServer() {
+    console.log('don this');
+    $.get("/get-status",
+      {
+        lat: this.props.latitude,
+        lng: this.props.longitude,
+        username: this.props.username,
+      },
+      (data, status) => {
+        console.log(data, status);
+        if (status === 'success') {
+          if (data.self_hit) {
+            // dead, so we reset
+            clearInterval(this.state.pollFunction);
+            console.log('eliminated by', data.self_hit_by);
+            // do dead things
+          }
+
+          if (data.arrow_hit) {
+            // do arrow hit things like show eliminations
+            console.log('eliminated', data.arrow_hit_at);
+          }
+        }
+      }
+    );
+
   }
 }
 
