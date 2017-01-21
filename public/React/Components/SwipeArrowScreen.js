@@ -1,6 +1,7 @@
 "use strict";
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 
 /*
 Props received:
@@ -15,8 +16,10 @@ export class SwipeArrowScreen  extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalIsOpen: false,
       arrowIsFlying: false,
       arrowStatusText: 'Traversing',
+      modalText: '',
       heading: 0,
       locationURL:"https://maps.googleapis.com/maps/api/staticmap?center="+this.props.latitude+','+this.props.longitude+"&zoom=15&size="+screen.width+"x"+(parseInt(screen.height*topSize))+"&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
     }
@@ -30,7 +33,8 @@ export class SwipeArrowScreen  extends React.Component {
   render() {
     // User is logged in
     return (
-      <div>
+      <div className='animated fadeIn animated-fast'>
+        {this.renderModal()}
         <div style={{height:(topSize*100)+'vh'}}>
           <img src={this.state.locationURL} />
         </div>
@@ -40,11 +44,29 @@ export class SwipeArrowScreen  extends React.Component {
       </div>
     )
   }
-
+  
+  renderModal() {
+    return (
+      <Modal
+        isOpen={this.state.modalIsOpen}
+        onRequestClose={this.closeModal}
+        style={modalStyles}
+      >
+        <p>{this.state.modalText}</p> 
+        <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
+      </Modal>
+    )
+  }
+  
+  respawn() {
+    this.closeModal()
+    //TODO logic to restart interval to check death
+  }
+  
   renderArrowStatus() {
     if (this.state.arrowIsFlying) {
       return (
-        <div id='arrowStatusText'>
+        <div id='arrowStatusText' className='animated fadeInLeft animated-fast'>
           {this.state.arrowStatusText}
         </div>
       )
@@ -115,29 +137,63 @@ export class SwipeArrowScreen  extends React.Component {
             // dead, so we reset
             clearInterval(this.state.pollFunction);
             console.log('eliminated by', data.self_hit_by);
+            this.setState({
+              modalIsOpen:true,
+              modalText: 'eliminated by:' + data.self_hit_by
+            })
             // do dead things
           }
 
           if (data.arrow_hit) {
             // do arrow hit things like show eliminations
             console.log('eliminated', data.arrow_hit_at);
+            this.setState({arrowStatusText: 'Eliminated '+data.arrow_hit_at})
           }
         }
       }
     );
 
   }
+  
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
 }
 
 const styleSheet = {
   button : {
-    position: 'absolute',
     textAlign: 'center',
-    bottom: '0',
-    width: '100vw',
-    marginBottom: '0px',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: '0',
+    width: '90%',
+    marginLeft: '5%',
   },
 }
+
+const modalStyles = {
+  overlay : {
+    position          : 'fixed',
+    top               : 0,
+    left              : 0,
+    right             : 0,
+    bottom            : 0,
+    backgroundColor   : 'rgba(0, 0, 0, 0.5)'
+  },
+  content : {
+    top                   : '40%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    padding               : '30px',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    background            : '#fff',
+    borderRadius          : '4px',
+    display               :'flex',
+    justifyContent        :'center',
+    height                :'30vh',
+  }
+};

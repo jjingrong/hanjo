@@ -22297,6 +22297,10 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
+	var _reactModal = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"react-modal\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22323,8 +22327,10 @@
 	    var _this = _possibleConstructorReturn(this, (SwipeArrowScreen.__proto__ || Object.getPrototypeOf(SwipeArrowScreen)).call(this, props));
 	
 	    _this.state = {
+	      modalIsOpen: false,
 	      arrowIsFlying: false,
 	      arrowStatusText: 'Traversing',
+	      modalText: '',
 	      heading: 0,
 	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + screen.width + "x" + parseInt(screen.height * topSize) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
 	    };
@@ -22343,7 +22349,8 @@
 	      // User is logged in
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'animated fadeIn animated-fast' },
+	        this.renderModal(),
 	        _react2.default.createElement(
 	          'div',
 	          { style: { height: topSize * 100 + 'vh' } },
@@ -22357,12 +22364,40 @@
 	      );
 	    }
 	  }, {
+	    key: 'renderModal',
+	    value: function renderModal() {
+	      return _react2.default.createElement(
+	        _reactModal2.default,
+	        {
+	          isOpen: this.state.modalIsOpen,
+	          onRequestClose: this.closeModal,
+	          style: modalStyles
+	        },
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          this.state.modalText
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'respawnButton', style: styleSheet.button, onClick: this.respawn.bind(this) },
+	          'Respawn'
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'respawn',
+	    value: function respawn() {
+	      this.closeModal();
+	      //TODO logic to restart interval to check death
+	    }
+	  }, {
 	    key: 'renderArrowStatus',
 	    value: function renderArrowStatus() {
 	      if (this.state.arrowIsFlying) {
 	        return _react2.default.createElement(
 	          'div',
-	          { id: 'arrowStatusText' },
+	          { id: 'arrowStatusText', className: 'animated fadeInLeft animated-fast' },
 	          this.state.arrowStatusText
 	        );
 	      } else {
@@ -22436,15 +22471,25 @@
 	            // dead, so we reset
 	            clearInterval(_this3.state.pollFunction);
 	            console.log('eliminated by', data.self_hit_by);
+	            _this3.setState({
+	              modalIsOpen: true,
+	              modalText: 'eliminated by:' + data.self_hit_by
+	            });
 	            // do dead things
 	          }
 	
 	          if (data.arrow_hit) {
 	            // do arrow hit things like show eliminations
 	            console.log('eliminated', data.arrow_hit_at);
+	            _this3.setState({ arrowStatusText: 'Eliminated ' + data.arrow_hit_at });
 	          }
 	        }
 	      });
+	    }
+	  }, {
+	    key: 'closeModal',
+	    value: function closeModal() {
+	      this.setState({ modalIsOpen: false });
 	    }
 	  }]);
 	
@@ -22453,14 +22498,39 @@
 	
 	var styleSheet = {
 	  button: {
-	    position: 'absolute',
 	    textAlign: 'center',
-	    bottom: '0',
-	    width: '100vw',
-	    marginBottom: '0px',
 	    display: 'flex',
 	    alignItems: 'center',
-	    justifyContent: 'center'
+	    justifyContent: 'center',
+	    position: 'absolute',
+	    bottom: '0',
+	    width: '90%',
+	    marginLeft: '5%'
+	  }
+	};
+	
+	var modalStyles = {
+	  overlay: {
+	    position: 'fixed',
+	    top: 0,
+	    left: 0,
+	    right: 0,
+	    bottom: 0,
+	    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+	  },
+	  content: {
+	    top: '40%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    padding: '30px',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)',
+	    background: '#fff',
+	    borderRadius: '4px',
+	    display: 'flex',
+	    justifyContent: 'center',
+	    height: '30vh'
 	  }
 	};
 
