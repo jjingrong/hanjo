@@ -22422,7 +22422,7 @@
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'animated fadeIn', id: 'shootButton', style: styleSheet.button, onClick: this.launchArrow.bind(this) },
-	          'Shoot'
+	          this.state.heading
 	        );
 	      }
 	    }
