@@ -22441,6 +22441,11 @@
 	      $.post("/shoot-arrow", info, function (data, status) {
 	        if (status === 'success') {
 	          _this2.setState({ arrowHeading: info.heading });
+	          var angle = parseInt(info.heading / 45) * 45;
+	          _this2.state.projectile.setIcon({
+	            url: '/images/arrow_' + angle.toString() + '.png',
+	            scale: new google.maps.Size(50, 50)
+	          });
 	          if (!_this2.state.arrowIsFlying) {
 	            _this2.setState({ arrowIsFlying: true });
 	            _this2.setupServerConnection();
@@ -22505,7 +22510,7 @@
 	        map: map,
 	        visible: true,
 	        icon: {
-	          url: '/images/arrow.png',
+	          url: '/images/arrow_0.png',
 	          scale: new google.maps.Size(50, 50)
 	        }
 	      });
