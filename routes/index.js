@@ -79,7 +79,8 @@ function processingLoop() {
 function checkArrowsHitSelf(usernameid, targetLat, targetLng) {
   for (var key in arrowGroup) {
     var arrow = arrowGroup[key];
-    if (calculateDistance(targetLat, targetLng, arrow.lat, arrow.lng) < HIT_DIST) {
+    if (calculateDistance(targetLat, targetLng, arrow.lat, arrow.lng) < HIT_DIST
+      && key !== usernameid) {
       console.log('collision occured');
       arrow.hit = true;
       arrow.at = usernameid;
