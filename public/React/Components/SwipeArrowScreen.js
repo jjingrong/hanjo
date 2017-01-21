@@ -1,6 +1,7 @@
 "use strict";
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 
 /*
 Props received:
@@ -15,8 +16,10 @@ export class SwipeArrowScreen  extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalIsOpen: false,
       arrowIsFlying: false,
       arrowStatusText: 'Traversing',
+      modalText: '',
       heading: 0,
       locationURL:"https://maps.googleapis.com/maps/api/staticmap?center="+this.props.latitude+','+this.props.longitude+"&zoom=15&size="+screen.width+"x"+(parseInt(screen.height*topSize))+"&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
     }
@@ -30,7 +33,8 @@ export class SwipeArrowScreen  extends React.Component {
   render() {
     // User is logged in
     return (
-      <div>
+      <div className='animated fadeIn animated-fast'>
+        {this.renderModal()}
         <div style={{height:(topSize*100)+'vh'}}>
           <img src={this.state.locationURL} />
         </div>
@@ -41,10 +45,30 @@ export class SwipeArrowScreen  extends React.Component {
     )
   }
 
+  renderModal() {
+    return (
+      <Modal
+        isOpen={this.state.modalIsOpen}
+        onRequestClose={this.closeModal}
+        style={modalStyles}
+        contentLabel="Modal"
+      >
+        <p id='modalStatusText'>{this.state.modalText}</p> 
+        <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
+      </Modal>
+    )
+  }
+
+  respawn() {
+    this.closeModal()
+    //restart interval
+    this.setupServerConnection();
+  }
+
   renderArrowStatus() {
     if (this.state.arrowIsFlying) {
       return (
-        <div id='arrowStatusText'>
+        <div id='arrowStatusText' className='animated-fast animated fadeInUp'>
           {this.state.arrowStatusText}
         </div>
       )
@@ -68,7 +92,10 @@ export class SwipeArrowScreen  extends React.Component {
       },
       (data, status) => {
         if (status === 'success') {
-          this.setState({arrowIsFlying: true})
+          if (!this.state.arrowIsFlying) {
+            this.setState({arrowIsFlying: true});
+            this.setupServerConnection();
+          }
         }
       }
     );
@@ -82,13 +109,13 @@ export class SwipeArrowScreen  extends React.Component {
     promise.then((deviceOrientation) => { // Device Orientation Events are supported
       // Register a callback to run every time a new
       // deviceorientation event is fired by the browser.
-      deviceOrientation.listen(function() {
+      deviceOrientation.listen(() => {
         // Get the current *screen-adjusted* device orientation angles
         var currentOrientation = deviceOrientation.getScreenAdjustedEuler();
         // Calculate the current compass heading that the user is 'looking at' (in degrees)
         var compassHeading = 360 - currentOrientation.alpha;
         // Set compass heading to state
-        this.state.heading = compassHeading;
+        this.setState({ heading: compassHeading });
       });
 
     }).catch(function(errorMessage) { // Device Orientation Events are not supported
@@ -97,11 +124,15 @@ export class SwipeArrowScreen  extends React.Component {
   }
 
   setupServerConnection() {
-    this.state.pollFunction = setInterval(this.checkStatusFromServer.bind(this), 1000);
+    if (this.state.pollFunction) {
+      clearInterval(this.state.pollFunction);
+    }
+    var func = setInterval(this.checkStatusFromServer.bind(this), 1000);
+
+    this.setState({ pollFunction: func });
   }
 
   checkStatusFromServer() {
-    console.log('don this');
     $.get("/get-status",
       {
         lat: this.props.latitude,
@@ -115,29 +146,84 @@ export class SwipeArrowScreen  extends React.Component {
             // dead, so we reset
             clearInterval(this.state.pollFunction);
             console.log('eliminated by', data.self_hit_by);
+            this.setState({
+              modalIsOpen:true,
+              modalText: 'Eliminated by:' + data.self_hit_by,
+              arrowIsFlying: false,
+            })
             // do dead things
           }
 
           if (data.arrow_hit) {
             // do arrow hit things like show eliminations
             console.log('eliminated', data.arrow_hit_at);
+            this.setState({
+              arrowStatusText: 'Eliminated '+ data.arrow_hit_at,
+              arrowIsFlying: false
+            });
+          }
+
+          if (data.expired) {
+            // do expired things
+            console.log('expired you missed');
+            this.setState({
+              arrowStatusText: 'You missed, resetting arrow . . ',
+            }, () => {
+              setTimeout(() => {
+                this.setState({arrowIsFlying: false})
+              }, 3000)
+            });
           }
         }
       }
     );
 
   }
+
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
 }
 
 const styleSheet = {
   button : {
-    position: 'absolute',
     textAlign: 'center',
-    bottom: '0',
-    width: '100vw',
-    marginBottom: '0px',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    WebkitDisplay: 'flex',
+    WebkitAlignItems: 'center',
+    WebkitJustifyContent: 'center',
+    position: 'absolute',
+    bottom: '0',
+    width: '90%',
+    marginLeft: '5%',
   },
 }
+
+const modalStyles = {
+  overlay : {
+    position          : 'fixed',
+    top               : 0,
+    left              : 0,
+    right             : 0,
+    bottom            : 0,
+    backgroundColor   : 'rgba(0, 0, 0, 0.5)'
+  },
+  content : {
+    top                   : '40%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    padding               : '30px',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    background            : '#fff',
+    borderRadius          : '4px',
+    display               :'flex',
+    justifyContent        :'center',
+    WebkitDisplay         : 'flex',
+    WebkitJustifyContent  : 'center',
+    height                :'30vh',
+  }
+};

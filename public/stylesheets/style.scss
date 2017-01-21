@@ -146,6 +146,9 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  -webkit-display: flex;
+  -webkit-flex-direction: column;
+  -webkit-justify-content: space-around;
   height: 100vh;
 }
 
@@ -160,10 +163,23 @@ p {
 	margin-bottom: 2em;
 	text-transform: uppercase;
 	width: 280px;
-
   &:hover {
   	background-color: #d44179;
   }
+}
+
+#respawnButton {
+  height: 50px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background-color: #fc8d83;
+	color: #eee;
+	font-weight: bold;
+	margin-bottom: 2em;
+	text-transform: uppercase;
+  width: 60% !important;
+  margin-left: 0px !important;
 }
 
 #arrowStatusText {
@@ -171,7 +187,21 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-display: flex;
+  -webkit-align-items: center;
+  -webkit-justify-content: center;
   font-family: bignoodletoo;
   font-size: 32px;
   color: white;
+}
+
+#modalStatusText {
+  font-family: bignoodletoo;
+  color: gray;
+  font-size: 24px;
+}
+
+.animated-fast {
+  animation-duration: 0.5s;
+  animation-delay: 0.1s;
 }
