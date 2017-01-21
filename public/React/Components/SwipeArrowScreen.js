@@ -146,7 +146,7 @@ export class SwipeArrowScreen  extends React.Component {
             console.log('eliminated by', data.self_hit_by);
             this.setState({
               modalIsOpen:true,
-              modalText: 'Eliminated by:' + data.self_hit_by
+              modalText: 'Eliminated by:' + data.self_hit_by,
               arrowIsFlying: false,
             })
             // do dead things
