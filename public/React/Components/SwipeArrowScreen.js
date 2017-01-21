@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom';
 /*
 Props received:
 - username
+- latitude
+- longitude
 */
 
 const topSize = 0.75
@@ -25,7 +27,6 @@ export class SwipeArrowScreen  extends React.Component {
   }
 
   render() {
-    console.log(this.state.locationURL)
     // User is logged in
     return (
       <div>
