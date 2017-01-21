@@ -110,6 +110,7 @@
 	  }, {
 	    key: 'setLatLong',
 	    value: function setLatLong(lat, lon) {
+	      console.log(lat, lon);
 	      this.setState({
 	        latitude: lat,
 	        longitude: lon
@@ -22332,7 +22333,7 @@
 	      arrowStatusText: 'Traversing',
 	      modalText: '',
 	      heading: 0,
-	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + parseInt(screen.height * topSize + screen.width) + "x" + parseInt(screen.height * topSize + screen.width) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
+	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + parseInt(screen.width) + "x" + parseInt(screen.width) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
 	    };
 	    return _this;
 	  }
@@ -22353,15 +22354,16 @@
 	        this.renderModal(),
 	        _react2.default.createElement(
 	          'div',
-	          { style: { height: topSize * 100 + 'vh' } },
+	          { style: { height: topSize * 100 + 'vh', paddingTop: '32px' } },
 	          _react2.default.createElement(
 	            'div',
 	            { style: {
 	                backgroundImage: 'url(\"' + this.state.locationURL + '\")',
 	                position: 'relative',
-	                height: '100%',
+	                height: screen.width,
 	                WebkitTransform: 'rotate(' + (360 - this.state.heading) + 'deg)',
-	                transform: 'rotate(' + (360 - this.state.heading) + 'deg)'
+	                transform: 'rotate(' + (360 - this.state.heading) + 'deg)',
+	                borderRadius: '50%'
 	              } },
 	            _react2.default.createElement('img', { src: '/images/hanzoIcon.png',
 	              style: {

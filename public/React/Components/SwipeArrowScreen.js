@@ -21,7 +21,7 @@ export class SwipeArrowScreen  extends React.Component {
       arrowStatusText: 'Traversing',
       modalText: '',
       heading: 0,
-      locationURL:"https://maps.googleapis.com/maps/api/staticmap?center="+this.props.latitude+','+this.props.longitude+"&zoom=15&size="+(parseInt(screen.height*topSize + screen.width))+"x"+(parseInt(screen.height*topSize + screen.width))+"&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
+      locationURL:"https://maps.googleapis.com/maps/api/staticmap?center="+this.props.latitude+','+this.props.longitude+"&zoom=15&size="+(parseInt(screen.width))+"x"+(parseInt(screen.width))+"&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
     }
   }
 
@@ -35,13 +35,14 @@ export class SwipeArrowScreen  extends React.Component {
     return (
       <div className='animated fadeIn animated-fast' style={{maxWidth: screen.width, maxHeight: screen.height}}>
         {this.renderModal()}
-        <div style={{height:(topSize*100)+'vh'}}>
+        <div style={{height:(topSize*100)+'vh', paddingTop:'32px'}}>
           <div style={{
               backgroundImage:'url(\"'+this.state.locationURL+'\")', 
               position:'relative', 
-              height:'100%', 
+              height:screen.width,
               WebkitTransform: 'rotate('+(360-this.state.heading)+'deg)',
               transform: 'rotate('+(360-this.state.heading)+'deg)',
+              borderRadius: '50%'
             }}>
             <img src={'/images/hanzoIcon.png'} 
               style={{
