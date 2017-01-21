@@ -6,11 +6,21 @@ export class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      usernameInput: ''
+      usernameInput: '',
     }
   }
   
   componentDidMount() {
+    if (navigator.geolocation) {
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 10000000,
+      }
+      navigator.geolocation.getCurrentPosition(this.storePosition.bind(this), this.showError.bind(this), options);
+    } else {
+      alert("Geolocation is not supported by this browser.")
+    }
   }
   
   render() {
@@ -30,7 +40,7 @@ export class LoginScreen extends React.Component {
                   <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>  
                 </p>
                 <p style={{marginTop:'25px'}}>
-                  <input className='animated fadeInUp' type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>
+                  {this.renderButton()}
                 </p>
               </div>
             </fieldset>
@@ -40,24 +50,62 @@ export class LoginScreen extends React.Component {
     )
   }
   
+  renderButton() {
+    if (this.props.latitude) {
+      return (<input type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>)
+    } else {
+      return (<input type="submit" value="Getting location" style={styleSheet.invalidLoginButton}/>)
+    }
+  }
+  
   handleChange(event) {
     this.setState({usernameInput: event.target.value});
   }
   
   handleSubmit(event) {
     event.preventDefault();
-    this.props.setUsername(this.state.usernameInput)
+    if (this.props.latitude) {
+      this.props.setUsername(this.state.usernameInput)
+    } else {
+      alert('We need your location!')
+    }
+  }
+  
+  storePosition(position) {
+    console.log('got position')
+    this.setState({
+      buttonColor: null,
+    }, () => {
+      this.props.setLatLong(position.coords.latitude, position.coords.longitude)
+    })
+  }
+  
+  showError(error) {
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        alert("User denied the request for Geolocation.")
+      break;
+      case error.POSITION_UNAVAILABLE:
+        alert("Location information is unavailable.")
+      break;
+      case error.TIMEOUT:
+        alert("The request to get user location timed out.")
+      break;
+      case error.UNKNOWN_ERROR:
+        alert("An unknown error occurred.")
+      break;
+    }
   }
   
 }
 
 const styleSheet = {
-  loginButton : {
-    position: 'absolute',
-    bottom: '0',
-    width: '100vw',
+  invalidLoginButton: {
+    backgroundColor: 'grey',
     marginBottom: '0px',
-    'marginLeft': '-17%'
+  },
+  loginButton : {
+    marginBottom: '0px',
   },
   hanjoText: {
     textAlign: 'center',

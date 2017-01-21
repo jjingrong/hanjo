@@ -20,6 +20,11 @@
 
 /* ---------- GENERAL ---------- */
 
+@font-face {
+    font-family: bignoodletoo;
+    src: url(/assets/bignoodletoo.ttf);
+}
+
 * {
   box-sizing: border-box;
 
@@ -61,7 +66,7 @@ p {
 
 .clearfix {
   *zoom: 1;
-
+  border: none; 
   &:before,
   &:after {
     content: ' ';
@@ -84,7 +89,7 @@ p {
 /* ---------- LOGIN ---------- */
 
 #login {
-	width: 280px;
+	width: 90%;
   height: 100vh;
 }
 
@@ -159,4 +164,14 @@ p {
   &:hover {
   	background-color: #d44179;
   }
+}
+
+#arrowStatusText {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: bignoodletoo;
+  font-size: 32px;
+  color: white;
 }
