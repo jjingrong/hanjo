@@ -22353,7 +22353,7 @@
 	        'div',
 	        { className: 'animated fadeIn animated-fast', style: { maxWidth: screen.width, maxHeight: screen.height } },
 	        this.renderModal(),
-	        _react2.default.createElement('div', { id: 'map', style: { height: topSize * 100 + 'vh' } }),
+	        _react2.default.createElement('div', { id: 'map', style: { width: screen.width, height: topSize * 100 + 'vh' } }),
 	        _react2.default.createElement(
 	          'div',
 	          { style: { height: '25vh' } },
@@ -22477,6 +22477,8 @@
 	        mapTypeId: 'roadmap'
 	      });
 	
+	      var bounds = new google.maps.LatLngBounds();
+	
 	      map.setOptions({ draggable: false });
 	      this.setState({ map: map });
 	
@@ -22484,11 +22486,17 @@
 	        position: hanzo,
 	        map: map,
 	        icon: {
-	          url: '/images/hanzoIcon.png',
+	          url: '/images/hanzoIcon_small.png',
 	          size: new google.maps.Size(80, 80),
-	          anchor: new google.maps.Point(0, 0)
+	          anchor: new google.maps.Point(0, 0),
+	          origin: new google.maps.Point(0, 0)
 	        }
 	      });
+	
+	      var loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+	      bounds.extend(loc);
+	
+	      map.panToBounds(bounds);
 	    }
 	  }, {
 	    key: 'checkStatusFromServer',
