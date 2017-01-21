@@ -22143,7 +22143,12 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(this.storePosition.bind(this), this.showError.bind(this));
+	        var options = {
+	          enableHighAccuracy: true,
+	          timeout: 30000,
+	          maximumAge: 10000000
+	        };
+	        navigator.geolocation.getCurrentPosition(this.storePosition.bind(this), this.showError.bind(this), options);
 	      } else {
 	        alert("Geolocation is not supported by this browser.");
 	      }
@@ -22336,7 +22341,7 @@
 	        null,
 	        _react2.default.createElement(
 	          'div',
-	          { style: { height: topSize * 100 + 'vh', backgroundColor: 'yellow' } },
+	          { style: { height: topSize * 100 + 'vh' } },
 	          _react2.default.createElement('img', { src: this.state.locationURL })
 	        ),
 	        _react2.default.createElement(

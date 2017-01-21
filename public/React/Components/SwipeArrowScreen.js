@@ -27,7 +27,7 @@ export class SwipeArrowScreen  extends React.Component {
     // User is logged in
     return (
       <div>
-        <div style={{height:(topSize*100)+'vh', backgroundColor:'yellow'}}>
+        <div style={{height:(topSize*100)+'vh'}}>
           <img src={this.state.locationURL} />
         </div>
         <div style={{height:'25vh'}}>

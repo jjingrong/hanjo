@@ -12,7 +12,12 @@ export class LoginScreen extends React.Component {
   
   componentDidMount() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(this.storePosition.bind(this), this.showError.bind(this));
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 10000000,
+      }
+      navigator.geolocation.getCurrentPosition(this.storePosition.bind(this), this.showError.bind(this), options);
     } else {
       alert("Geolocation is not supported by this browser.")
     }
