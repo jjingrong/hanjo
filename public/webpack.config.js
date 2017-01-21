@@ -9,7 +9,7 @@ var config = {
 	entry: APP_DIR + '/main.js',
 	output: {
 		path: BUILD_DIR,
-		filename: 'prodbundle.js'
+		filename: 'bundle.js'
 	},
 	module : {
 		// Use of loaders ref: http://webpack.github.io/docs/using-loaders.html
