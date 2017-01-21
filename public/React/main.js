@@ -9,7 +9,9 @@ class MainPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: null
+      username: null,
+      latitude: null,
+      longitude: null,
     }
   }
   
@@ -17,18 +19,30 @@ class MainPanel extends React.Component {
     // User is logged in
     if (this.state.username) {
       return (
-        <SwipeArrowScreen 
+        <SwipeArrowScreen
+          latitude = {this.state.latitude}
+          longitude = {this.state.longitude}
           username = {this.state.username}
           />
       )
     } else {
       // User is not logged in, show login page
       return (
-        <LoginScreen 
+        <LoginScreen
+          latitude = {this.state.latitude}
+          longitude = {this.state.longitude}
+          setLatLong = {this.setLatLong.bind(this)}
           setUsername = {this.setUsername.bind(this)}
           />
       )
     }
+  }
+  
+  setLatLong(lat, lon) {
+    this.setState({
+      latitude: lat,
+      longitude: lon
+    })
   }
   
   setUsername(username) {

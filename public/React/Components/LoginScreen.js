@@ -7,8 +7,6 @@ export class LoginScreen extends React.Component {
     super(props);
     this.state = {
       usernameInput: '',
-      latitude: null,
-      longitude: null,
     }
   }
   
@@ -48,7 +46,7 @@ export class LoginScreen extends React.Component {
   }
   
   renderButton() {
-    if (this.state.latitude) {
+    if (this.props.latitude) {
       return (<input type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>)
     } else {
       return (<input type="submit" value="Getting location" style={styleSheet.invalidLoginButton}/>)
@@ -61,7 +59,7 @@ export class LoginScreen extends React.Component {
   
   handleSubmit(event) {
     event.preventDefault();
-    if (this.state.latitude) {
+    if (this.props.latitude) {
       this.props.setUsername(this.state.usernameInput)
     } else {
       alert('We need your location!')
@@ -72,8 +70,8 @@ export class LoginScreen extends React.Component {
     console.log('got position')
     this.setState({
       buttonColor: null,
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude
+    }, () => {
+      this.props.setLatLong(position.coords.latitude, position.coords.longitude)
     })
   }
   

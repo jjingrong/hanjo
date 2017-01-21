@@ -7,12 +7,15 @@ Props received:
 - username
 */
 
+const topSize = 0.75
+
 export class SwipeArrowScreen  extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       arrowIsFlying: false,
-      arrowStatusText: 'Traversing'
+      arrowStatusText: 'Traversing',
+      locationURL:"https://maps.googleapis.com/maps/api/staticmap?center="+this.props.latitude+','+this.props.longitude+"&zoom=15&size="+screen.width+"x"+(parseInt(screen.height*topSize))+"&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
     }
   }
   
@@ -20,10 +23,12 @@ export class SwipeArrowScreen  extends React.Component {
   }
   
   render() {
+    console.log(this.state.locationURL)
     // User is logged in
     return (
       <div>
-        <div style={{height:'75vh', backgroundColor:'yellow'}}>
+        <div style={{height:(topSize*100)+'vh', backgroundColor:'yellow'}}>
+          <img src={this.state.locationURL} />
         </div>
         <div style={{height:'25vh'}}>
           {this.renderArrowStatus()}
