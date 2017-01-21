@@ -45,6 +45,8 @@ router.get('/get-status', function(req, res) {
 });
 
 var arrowGroup = {};
+const HIT_DIST = 0.03; // 30m range
+const SPEED_DIST = 0.005 // 5m/sec
 
 function addArrow(usernameid, lat, lng, heading) {
   arrowGroup[usernameid] = {
@@ -59,7 +61,7 @@ function processingLoop() {
   for (var key in arrowGroup) {
     var arrow = arrowGroup[key]
 
-    var newLatLng = calculateLatLng(arrow.lat, arrow.lng, arrow.heading, 0.02);
+    var newLatLng = calculateLatLng(arrow.lat, arrow.lng, arrow.heading, SPEED_DIST);
 
     arrow.lat = newLatLng[0];
     arrow.lng = newLatLng[1];
@@ -70,8 +72,9 @@ function processingLoop() {
 function checkArrowsHitTarget(targetLat, targetLng) {
   for (var key in arrowGroup) {
     var arrow = arrowGroup[key];
-    if (calculateDistance(targetLat, targetLng, arrow.lat, arrow.lng) < 0.01) {
+    if (calculateDistance(targetLat, targetLng, arrow.lat, arrow.lng) < HIT_DIST) {
       delete arrowGroup[key];
+      console.log('collision occured');
       return { hit: true, by: key };
     };
   }
