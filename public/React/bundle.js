@@ -22333,6 +22333,7 @@
 	      arrowStatusText: 'Traversing',
 	      modalText: '',
 	      heading: 0,
+	      arrowHeading: 0,
 	      killAudio: new Audio('/sounds/kill.mp3'),
 	      ryugaAudio: new Audio('/sounds/ult.mp3')
 	    };
@@ -22429,16 +22430,24 @@
 	    value: function launchArrow() {
 	      var _this2 = this;
 	
+	      var info = {
+	        lat: this.props.latitude,
+	        lng: this.props.longitude,
+	        heading: this.state.heading,
+	        username: this.props.username
+	      };
+	
 	      this.state.ryugaAudio.play();
 	      // Send api to launch
 	      setTimeout(function () {
-	        $.post("/shoot-arrow", {
-	          lat: _this2.props.latitude,
-	          lng: _this2.props.longitude,
-	          heading: _this2.state.heading,
-	          username: _this2.props.username
-	        }, function (data, status) {
+	        $.post("/shoot-arrow", info, function (data, status) {
 	          if (status === 'success') {
+	            _this2.setState({ arrowHeading: info.heading });
+	            var angle = parseInt(info.heading / 45) * 45 % 360;
+	            _this2.state.projectile.setIcon({
+	              url: '/images/arrow_' + angle.toString() + '.png',
+	              scale: new google.maps.Size(50, 50)
+	            });
 	            if (!_this2.state.arrowIsFlying) {
 	              _this2.setState({ arrowIsFlying: true });
 	              _this2.setupServerConnection();
@@ -22496,7 +22505,7 @@
 	
 	      var bounds = new google.maps.LatLngBounds();
 	
-	      map.setOptions({ draggable: false, zoomControl: false });
+	      map.setOptions({ draggable: false, zoomControl: false, disableDefaultUI: true });
 	      this.setState({ map: map });
 	
 	      var projectile = new google.maps.Marker({
@@ -22504,15 +22513,8 @@
 	        map: map,
 	        visible: true,
 	        icon: {
-	          //path: google.maps.SymbolPath.CIRCLE,
-	          //scale: 6,
-	          url: '/images/arrow.png',
+	          url: '/images/arrow_0.png',
 	          scale: new google.maps.Size(50, 50)
-	          // fillColor: 'skyblue',
-	          // fillOpacity: 0.9,
-	          // strokeOpacity: 0.9,
-	          // strokeWeight: 1.0,
-	          // strokeColor: '#2f4f4f'
 	        }
 	      });
 	
