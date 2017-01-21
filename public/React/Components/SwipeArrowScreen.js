@@ -44,7 +44,7 @@ export class SwipeArrowScreen  extends React.Component {
       </div>
     )
   }
-  
+
   renderModal() {
     return (
       <Modal
@@ -52,17 +52,17 @@ export class SwipeArrowScreen  extends React.Component {
         onRequestClose={this.closeModal}
         style={modalStyles}
       >
-        <p>{this.state.modalText}</p> 
+        <p>{this.state.modalText}</p>
         <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
       </Modal>
     )
   }
-  
+
   respawn() {
     this.closeModal()
     //TODO logic to restart interval to check death
   }
-  
+
   renderArrowStatus() {
     if (this.state.arrowIsFlying) {
       return (
@@ -90,7 +90,11 @@ export class SwipeArrowScreen  extends React.Component {
       },
       (data, status) => {
         if (status === 'success') {
-          this.setState({arrowIsFlying: true})
+          if (!this.state.arrowIsFlying) {
+            console.log('lol');
+            this.setState({arrowIsFlying: true});
+            this.setupServerConnection();
+          }
         }
       }
     );
@@ -119,11 +123,13 @@ export class SwipeArrowScreen  extends React.Component {
   }
 
   setupServerConnection() {
+    if (this.state.pollFunction) {
+      clearInterval(this.state.pollFunction);
+    }
     this.state.pollFunction = setInterval(this.checkStatusFromServer.bind(this), 1000);
   }
 
   checkStatusFromServer() {
-    console.log('don this');
     $.get("/get-status",
       {
         lat: this.props.latitude,
@@ -138,23 +144,27 @@ export class SwipeArrowScreen  extends React.Component {
             clearInterval(this.state.pollFunction);
             console.log('eliminated by', data.self_hit_by);
             this.setState({
-              modalIsOpen:true,
-              modalText: 'eliminated by:' + data.self_hit_by
-            })
+              modalIsOpen: true,
+              modalText: 'eliminated by:' + data.self_hit_by,
+              arrowIsFlying: false,
+            });
             // do dead things
           }
 
           if (data.arrow_hit) {
             // do arrow hit things like show eliminations
             console.log('eliminated', data.arrow_hit_at);
-            this.setState({arrowStatusText: 'Eliminated '+data.arrow_hit_at})
+            this.setState({
+              arrowStatusText: 'Eliminated '+ data.arrow_hit_at,
+              arrowIsFlying: false
+            });
           }
         }
       }
     );
 
   }
-  
+
   closeModal() {
     this.setState({modalIsOpen: false});
   }
