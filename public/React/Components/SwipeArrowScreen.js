@@ -21,11 +21,12 @@ export class SwipeArrowScreen  extends React.Component {
       arrowStatusText: 'Traversing',
       modalText: '',
       heading: 0,
-      locationURL:"https://maps.googleapis.com/maps/api/staticmap?center="+this.props.latitude+','+this.props.longitude+"&zoom=15&size="+(parseInt(screen.width))+"x"+(parseInt(screen.width))+"&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
     }
   }
 
   componentDidMount() {
+    //setTimeout(this.setupMap.bind(this), 3000);
+    this.setupMap();
     this.setupDeviceCompass();
     this.setupServerConnection();
   }
@@ -35,29 +36,7 @@ export class SwipeArrowScreen  extends React.Component {
     return (
       <div className='animated fadeIn animated-fast' style={{maxWidth: screen.width, maxHeight: screen.height}}>
         {this.renderModal()}
-        <div style={{height:(topSize*100)+'vh', paddingTop:'32px'}}>
-          <div style={{
-              backgroundImage:'url(\"'+this.state.locationURL+'\")', 
-              position:'relative', 
-              height:screen.width,
-              WebkitTransform: 'rotate('+(360-this.state.heading)+'deg)',
-              transform: 'rotate('+(360-this.state.heading)+'deg)',
-              borderRadius: '50%'
-            }}>
-            <img src={'/images/hanzoIcon.png'} 
-              style={{
-                position: 'absolute',
-                left: '0',
-                right: '0',
-                height: '50px',
-                width: '50px',
-                top: '48%',
-                margin: '0 auto',
-                WebkitTransform: 'rotate('+(this.state.heading)+'deg)',
-                transform: 'rotate('+(this.state.heading)+'deg)',
-              }}
-              />
-          </div>
+        <div id='map' style={{ width: screen.width, height:(topSize*100)+'vh'}}>
         </div>
         <div style={{height:'25vh'}}>
           {this.renderArrowStatus()}
@@ -74,7 +53,7 @@ export class SwipeArrowScreen  extends React.Component {
         style={modalStyles}
         contentLabel="Modal"
       >
-        <p id='modalStatusText'>{this.state.modalText}</p> 
+        <p id='modalStatusText'>{this.state.modalText}</p>
         <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
       </Modal>
     )
@@ -140,6 +119,7 @@ export class SwipeArrowScreen  extends React.Component {
         var compassHeading = 360 - currentOrientation.alpha;
         // Set compass heading to state
         this.setState({ heading: compassHeading });
+        this.state.map.setHeading(compassHeading);
       });
 
     }).catch(function(errorMessage) { // Device Orientation Events are not supported
@@ -151,9 +131,43 @@ export class SwipeArrowScreen  extends React.Component {
     if (this.state.pollFunction) {
       clearInterval(this.state.pollFunction);
     }
-    var func = setInterval(this.checkStatusFromServer.bind(this), 1000);
+    var func = setInterval(this.checkStatusFromServer.bind(this), 600);
 
     this.setState({ pollFunction: func });
+  }
+
+  setupMap() {
+    var hanzo = new google.maps.LatLng(
+      parseFloat(this.props.latitude),
+      parseFloat(this.props.longitude)
+    );
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 15,
+      center: hanzo,
+      mapTypeId: 'roadmap'
+    });
+
+    var bounds = new google.maps.LatLngBounds();
+
+    map.setOptions({ draggable: false });
+    this.setState({ map: map });
+
+    var marker = new google.maps.Marker({
+      position: hanzo,
+      map: map,
+      icon: {
+        url: '/images/hanzoIcon_small.png',
+        size: new google.maps.Size(80, 80),
+        anchor: new google.maps.Point(0, 0),
+        origin: new google.maps.Point(0, 0),
+      }
+    });
+
+    var loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+    bounds.extend(loc);
+
+    map.panToBounds(bounds);
   }
 
   checkStatusFromServer() {

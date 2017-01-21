@@ -64,7 +64,7 @@ router.get('/get-status', function(req, res) {
 
 var arrowGroup = {};
 const HIT_DIST = 0.02; // 20m range
-const SPEED_DIST = 0.007 // 7m/sec
+const SPEED_DIST = 0.002 // 7m/sec
 
 function addArrow(usernameid, lat, lng, heading) {
   arrowGroup[usernameid] = {
@@ -171,6 +171,6 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
 }
 
 // Do the eval loop
-setInterval(processingLoop, 1000);
+setInterval(processingLoop, 600);
 
 module.exports = router;
