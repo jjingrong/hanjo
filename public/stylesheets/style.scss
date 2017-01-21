@@ -143,3 +143,20 @@ p {
   justify-content: space-around;
   height: 100vh;
 }
+
+#shootButton {
+  height: 50px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background-color: #ea4c88;
+	color: #eee;
+	font-weight: bold;
+	margin-bottom: 2em;
+	text-transform: uppercase;
+	width: 280px;
+
+  &:hover {
+  	background-color: #d44179;
+  }
+}

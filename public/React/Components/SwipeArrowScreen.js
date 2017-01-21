@@ -2,6 +2,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+/* 
+Props received:
+- username
+*/
+
 export class SwipeArrowScreen  extends React.Component {
   constructor(props) {
     super(props);
@@ -16,12 +21,17 @@ export class SwipeArrowScreen  extends React.Component {
     // User is logged in
     return (
       <div>
-        Hello {this.props.username}
+        <input className='animated fadeIn' id='shootButton' type="submit" value="Shoot" style={styleSheet.button}/>
       </div>
     )
   }
 }
 
 const styleSheet = {
-
+  button : {
+    position: 'absolute',
+    bottom: '0',
+    width: '100vw',
+    marginBottom: '0px'
+  },
 }
