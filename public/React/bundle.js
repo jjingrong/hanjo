@@ -22333,7 +22333,9 @@
 	      arrowStatusText: 'Traversing',
 	      modalText: '',
 	      heading: 0,
-	      arrowHeading: 0
+	      arrowHeading: 0,
+	      killAudio: new Audio('/sounds/kill.mp3'),
+	      ryugaAudio: new Audio('/sounds/ult.mp3')
 	    };
 	    return _this;
 	  }
@@ -22428,15 +22430,14 @@
 	    value: function launchArrow() {
 	      var _this2 = this;
 	
-	      var audio = new Audio('/sounds/ult.mp3');
-	      audio.play();
-	
 	      var info = {
 	        lat: this.props.latitude,
 	        lng: this.props.longitude,
 	        heading: this.state.heading,
 	        username: this.props.username
 	      };
+	
+	      this.state.ryugaAudio.play();
 	      // Send api to launch
 	      $.post("/shoot-arrow", info, function (data, status) {
 	        if (status === 'success') {
@@ -22550,8 +22551,7 @@
 	          if (data.arrow_hit) {
 	            // do arrow hit things like show eliminations
 	            console.log('eliminated', data.arrow_hit_at);
-	            var audio = new Audio('/sounds/kill.mp3');
-	            audio.play();
+	            _this4.state.killAudio.play();
 	            _this4.state.projectile.setVisible(false);
 	
 	            _this4.setState({
