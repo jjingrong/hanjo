@@ -294,7 +294,7 @@ const modalStyles = {
     justifyContent        :'center',
     WebkitDisplay         : 'flex',
     WebkitJustifyContent  : 'center',
-    height                :'30vh',
-    width:                : '60%'
+    height                : '30vh',
+    width                 : '60%'
   }
 };
