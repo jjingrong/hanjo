@@ -22354,7 +22354,23 @@
 	        _react2.default.createElement(
 	          'div',
 	          { style: { height: topSize * 100 + 'vh' } },
-	          _react2.default.createElement('img', { src: this.state.locationURL })
+	          _react2.default.createElement(
+	            'div',
+	            { style: { backgroundImage: 'url(\"' + this.state.locationURL + '\")', position: 'relative', height: '100%' } },
+	            _react2.default.createElement('img', { src: '/images/hanzoIcon.png',
+	              style: {
+	                position: 'absolute',
+	                left: '0',
+	                right: '0',
+	                height: '50px',
+	                width: '50px',
+	                top: '48%',
+	                margin: '0 auto',
+	                WebkitTransform: 'rotate(' + this.state.heading + 'deg)',
+	                transform: 'rotate(' + this.state.heading + 'deg)'
+	              }
+	            })
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',

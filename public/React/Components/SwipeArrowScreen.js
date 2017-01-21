@@ -36,7 +36,21 @@ export class SwipeArrowScreen  extends React.Component {
       <div className='animated fadeIn animated-fast'>
         {this.renderModal()}
         <div style={{height:(topSize*100)+'vh'}}>
-          <img src={this.state.locationURL} />
+          <div style={{backgroundImage:'url(\"'+this.state.locationURL+'\")', position:'relative', height:'100%'}}>
+            <img src={'/images/hanzoIcon.png'} 
+              style={{
+                position: 'absolute',
+                left: '0',
+                right: '0',
+                height: '50px',
+                width: '50px',
+                top: '48%',
+                margin: '0 auto',
+                WebkitTransform: 'rotate('+this.state.heading+'deg)',
+                transform: 'rotate('+this.state.heading+'deg)',
+              }}
+              />
+          </div>
         </div>
         <div style={{height:'25vh'}}>
           {this.renderArrowStatus()}
