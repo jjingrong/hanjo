@@ -60,8 +60,8 @@ router.get('/get-status', function(req, res) {
 });
 
 var arrowGroup = {};
-const HIT_DIST = 0.03; // 30m range
-const SPEED_DIST = 0.01 // 10m/sec
+const HIT_DIST = 0.025; // 25m range
+const SPEED_DIST = 0.005 // 5m/sec
 
 function addArrow(usernameid, lat, lng, heading) {
   arrowGroup[usernameid] = {
@@ -78,11 +78,6 @@ function processingLoop() {
   for (var key in arrowGroup) {
     var arrow = arrowGroup[key]
     var dist = SPEED_DIST;
-
-    if (arrow.count === 0) {
-      // HACK: Initial Burst to prevent hitting behind
-      dist = HIT_DIST * 1.2;
-    }
 
     var newLatLng = calculateLatLng(arrow.lat, arrow.lng, arrow.heading, dist);
 

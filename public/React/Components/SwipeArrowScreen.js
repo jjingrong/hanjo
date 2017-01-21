@@ -21,6 +21,7 @@ export class SwipeArrowScreen  extends React.Component {
       arrowStatusText: 'Traversing',
       modalText: '',
       heading: 0,
+      arrowHeading: 0,
     }
   }
 
@@ -98,17 +99,19 @@ export class SwipeArrowScreen  extends React.Component {
   launchArrow() {
 
     var audio = new Audio('/sounds/ult.mp3');
-            audio.play();
+    audio.play();
+
+    var info = {
+      lat: this.props.latitude,
+      lng: this.props.longitude,
+      heading: this.state.heading,
+      username: this.props.username,
+    };
     // Send api to launch
-    $.post("/shoot-arrow",
-      {
-        lat: this.props.latitude,
-        lng: this.props.longitude,
-        heading: this.state.heading,
-        username: this.props.username,
-      },
+    $.post("/shoot-arrow", info,
       (data, status) => {
         if (status === 'success') {
+          this.setState({ arrowHeading: info.heading });
           if (!this.state.arrowIsFlying) {
             this.setState({arrowIsFlying: true});
             this.setupServerConnection();
@@ -163,7 +166,7 @@ export class SwipeArrowScreen  extends React.Component {
 
     var bounds = new google.maps.LatLngBounds();
 
-    map.setOptions({ draggable: false, zoomControl: false });
+    map.setOptions({ draggable: false, zoomControl: false, disableDefaultUI: true });
     this.setState({ map: map });
 
     var projectile = new google.maps.Marker({
@@ -171,15 +174,8 @@ export class SwipeArrowScreen  extends React.Component {
       map: map,
       visible: true,
       icon: {
-        //path: google.maps.SymbolPath.CIRCLE,
-        //scale: 6,
         url: '/images/arrow.png',
-        scale: new google.maps.Size(50,50)
-        // fillColor: 'skyblue',
-        // fillOpacity: 0.9,
-        // strokeOpacity: 0.9,
-        // strokeWeight: 1.0,
-        // strokeColor: '#2f4f4f'
+        scale: new google.maps.Size(50,50),
       }
     });
 

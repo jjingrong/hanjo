@@ -22332,7 +22332,8 @@
 	      arrowIsFlying: false,
 	      arrowStatusText: 'Traversing',
 	      modalText: '',
-	      heading: 0
+	      heading: 0,
+	      arrowHeading: 0
 	    };
 	    return _this;
 	  }
@@ -22429,14 +22430,17 @@
 	
 	      var audio = new Audio('/sounds/ult.mp3');
 	      audio.play();
-	      // Send api to launch
-	      $.post("/shoot-arrow", {
+	
+	      var info = {
 	        lat: this.props.latitude,
 	        lng: this.props.longitude,
 	        heading: this.state.heading,
 	        username: this.props.username
-	      }, function (data, status) {
+	      };
+	      // Send api to launch
+	      $.post("/shoot-arrow", info, function (data, status) {
 	        if (status === 'success') {
+	          _this2.setState({ arrowHeading: info.heading });
 	          if (!_this2.state.arrowIsFlying) {
 	            _this2.setState({ arrowIsFlying: true });
 	            _this2.setupServerConnection();
@@ -22493,7 +22497,7 @@
 	
 	      var bounds = new google.maps.LatLngBounds();
 	
-	      map.setOptions({ draggable: false, zoomControl: false });
+	      map.setOptions({ draggable: false, zoomControl: false, disableDefaultUI: true });
 	      this.setState({ map: map });
 	
 	      var projectile = new google.maps.Marker({
@@ -22501,15 +22505,8 @@
 	        map: map,
 	        visible: true,
 	        icon: {
-	          //path: google.maps.SymbolPath.CIRCLE,
-	          //scale: 6,
 	          url: '/images/arrow.png',
 	          scale: new google.maps.Size(50, 50)
-	          // fillColor: 'skyblue',
-	          // fillOpacity: 0.9,
-	          // strokeOpacity: 0.9,
-	          // strokeWeight: 1.0,
-	          // strokeColor: '#2f4f4f'
 	        }
 	      });
 	
