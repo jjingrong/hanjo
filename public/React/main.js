@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {LoginScreen} from './Components/LoginScreen'
+import {SwipeArrowScreen} from './Components/SwipeArrowScreen'
 
 class MainPanel extends React.Component {
   constructor(props) {
@@ -16,8 +17,8 @@ class MainPanel extends React.Component {
     // User is logged in
     if (this.state.username) {
       return (
-        <LoginScreen 
-          setUsername = {this.setUsername.bind(this)}
+        <SwipeArrowScreen 
+          username = {this.state.username}
           />
       )
     } else {
