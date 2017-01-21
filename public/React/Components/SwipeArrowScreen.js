@@ -48,9 +48,16 @@ export class SwipeArrowScreen  extends React.Component {
         onRequestClose={this.closeModal}
         style={modalStyles}
       >
-        <p>Modal Content.</p>
+        <p>You got shot by a pro genju.</p> 
+        <div id='respawnButton' style={styleSheet.button} onClick={this.respawn.bind(this)}>Respawn</div>
       </Modal>
     )
+  }
+  
+  respawn() {
+    this.closeModal()
+    //TODO logic to restart interval to check death
+    
   }
   
   renderArrowStatus() {
@@ -71,7 +78,7 @@ export class SwipeArrowScreen  extends React.Component {
   
   launchArrow() {
     // Send api to launch
-    this.setState({arrowIsFlying: true, modalIsOpen:true})
+    this.setState({arrowIsFlying: true})
     // Start listening to arrow events
   }
   
@@ -100,16 +107,20 @@ const modalStyles = {
     left              : 0,
     right             : 0,
     bottom            : 0,
-    backgroundColor   : 'rgba(255, 255, 255, 0.75)'
+    backgroundColor   : 'rgba(0, 0, 0, 0.5)'
   },
   content : {
-    top                   : '50%',
+    top                   : '40%',
     left                  : '50%',
     right                 : 'auto',
     bottom                : 'auto',
+    padding               : '30px',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)',
     background            : '#fff',
     borderRadius          : '4px',
+    display               :'flex',
+    justifyContent        :'center',
+    height                :'30vh',
   }
 };
