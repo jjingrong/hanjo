@@ -41,7 +41,9 @@ export class SwipeArrowScreen  extends React.Component {
       )
     } else {
       return (
-        <input className='animated fadeIn' id='shootButton' value="Shoot" style={styleSheet.button} onClick={this.launchArrow.bind(this)}/>
+        <div className='animated fadeIn' id='shootButton' style={styleSheet.button} onClick={this.launchArrow.bind(this)}>
+          Shoot
+        </div>
       )
     }
   }
@@ -60,6 +62,9 @@ const styleSheet = {
     textAlign: 'center',
     bottom: '0',
     width: '100vw',
-    marginBottom: '0px'
+    marginBottom: '0px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 }

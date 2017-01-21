@@ -6,11 +6,18 @@ export class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      usernameInput: ''
+      usernameInput: '',
+      latitude: null,
+      longitude: null,
     }
   }
   
   componentDidMount() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.storePosition.bind(this), this.showError.bind(this));
+    } else {
+      alert("Geolocation is not supported by this browser.")
+    }
   }
   
   render() {
@@ -30,7 +37,7 @@ export class LoginScreen extends React.Component {
                   <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>  
                 </p>
                 <p style={{marginTop:'25px'}}>
-                  <input className='animated fadeInUp' type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>
+                  {this.renderButton()}
                 </p>
               </div>
             </fieldset>
@@ -40,18 +47,64 @@ export class LoginScreen extends React.Component {
     )
   }
   
+  renderButton() {
+    if (this.state.latitude) {
+      return (<input type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>)
+    } else {
+      return (<input type="submit" value="Getting location" style={styleSheet.invalidLoginButton}/>)
+    }
+  }
+  
   handleChange(event) {
     this.setState({usernameInput: event.target.value});
   }
   
   handleSubmit(event) {
     event.preventDefault();
-    this.props.setUsername(this.state.usernameInput)
+    if (this.state.latitude) {
+      this.props.setUsername(this.state.usernameInput)
+    } else {
+      alert('We need your location!')
+    }
+  }
+  
+  storePosition(position) {
+    console.log('got position')
+    this.setState({
+      buttonColor: null,
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    })
+  }
+  
+  showError(error) {
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        alert("User denied the request for Geolocation.")
+      break;
+      case error.POSITION_UNAVAILABLE:
+        alert("Location information is unavailable.")
+      break;
+      case error.TIMEOUT:
+        alert("The request to get user location timed out.")
+      break;
+      case error.UNKNOWN_ERROR:
+        alert("An unknown error occurred.")
+      break;
+    }
   }
   
 }
 
 const styleSheet = {
+  invalidLoginButton: {
+    backgroundColor: 'grey',
+    position: 'absolute',
+    bottom: '0',
+    width: '100vw',
+    marginBottom: '0px',
+    'marginLeft': '-17%'
+  },
   loginButton : {
     position: 'absolute',
     bottom: '0',
