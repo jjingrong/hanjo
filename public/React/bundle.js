@@ -22305,7 +22305,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/* 
+	/*
 	Props received:
 	- username
 	- latitude
@@ -22325,6 +22325,7 @@
 	    _this.state = {
 	      arrowIsFlying: false,
 	      arrowStatusText: 'Traversing',
+	      heading: 0,
 	      locationURL: "https://maps.googleapis.com/maps/api/staticmap?center=" + _this.props.latitude + ',' + _this.props.longitude + "&zoom=15&size=" + screen.width + "x" + parseInt(screen.height * topSize) + "&key=AIzaSyBbInQqM4JrDDU_VlqqcNkGy99HkLMGd_8"
 	    };
 	    return _this;
@@ -22332,7 +22333,10 @@
 	
 	  _createClass(SwipeArrowScreen, [{
 	    key: 'componentDidMount',
-	    value: function componentDidMount() {}
+	    value: function componentDidMount() {
+	      this.setupDeviceCompass();
+	      this.setupServerConnection();
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -22372,9 +22376,75 @@
 	  }, {
 	    key: 'launchArrow',
 	    value: function launchArrow() {
+	      var _this2 = this;
+	
 	      // Send api to launch
-	      this.setState({ arrowIsFlying: true });
-	      // Start listening to arrow events
+	      $.post("/shoot-arrow", {
+	        lat: this.props.latitude,
+	        lng: this.props.longitude,
+	        heading: this.state.heading,
+	        username: this.props.username
+	      }, function (data, status) {
+	        if (status === 'success') {
+	          _this2.setState({ arrowIsFlying: true });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'setupDeviceCompass',
+	    value: function setupDeviceCompass() {
+	      // Obtain a new *world-oriented* Full Tilt JS DeviceOrientation Promise
+	      var promise = FULLTILT.getDeviceOrientation({ 'type': 'world' });
+	
+	      // Wait for Promise result
+	      promise.then(function (deviceOrientation) {
+	        // Device Orientation Events are supported
+	        // Register a callback to run every time a new
+	        // deviceorientation event is fired by the browser.
+	        deviceOrientation.listen(function () {
+	          // Get the current *screen-adjusted* device orientation angles
+	          var currentOrientation = deviceOrientation.getScreenAdjustedEuler();
+	          // Calculate the current compass heading that the user is 'looking at' (in degrees)
+	          var compassHeading = 360 - currentOrientation.alpha;
+	          // Set compass heading to state
+	          this.state.heading = compassHeading;
+	        });
+	      }).catch(function (errorMessage) {
+	        // Device Orientation Events are not supported
+	        console.log(errorMessage);
+	      });
+	    }
+	  }, {
+	    key: 'setupServerConnection',
+	    value: function setupServerConnection() {
+	      this.state.pollFunction = setInterval(this.checkStatusFromServer.bind(this), 1000);
+	    }
+	  }, {
+	    key: 'checkStatusFromServer',
+	    value: function checkStatusFromServer() {
+	      var _this3 = this;
+	
+	      console.log('don this');
+	      $.get("/get-status", {
+	        lat: this.props.latitude,
+	        lng: this.props.longitude,
+	        username: this.props.username
+	      }, function (data, status) {
+	        console.log(data, status);
+	        if (status === 'success') {
+	          if (data.self_hit) {
+	            // dead, so we reset
+	            clearInterval(_this3.state.pollFunction);
+	            console.log('eliminated by', data.self_hit_by);
+	            // do dead things
+	          }
+	
+	          if (data.arrow_hit) {
+	            // do arrow hit things like show eliminations
+	            console.log('eliminated', data.arrow_hit_at);
+	          }
+	        }
+	      });
 	    }
 	  }]);
 	
