@@ -44,7 +44,7 @@ export class SwipeArrowScreen  extends React.Component {
       </div>
     )
   }
-  
+
   renderModal() {
     return (
       <Modal
@@ -58,12 +58,12 @@ export class SwipeArrowScreen  extends React.Component {
       </Modal>
     )
   }
-  
+
   respawn() {
     this.closeModal()
     //TODO logic to restart interval to check death
   }
-  
+
   renderArrowStatus() {
     if (this.state.arrowIsFlying) {
       return (
@@ -91,7 +91,11 @@ export class SwipeArrowScreen  extends React.Component {
       },
       (data, status) => {
         if (status === 'success') {
-          this.setState({arrowIsFlying: true})
+          if (!this.state.arrowIsFlying) {
+            console.log('lol');
+            this.setState({arrowIsFlying: true});
+            this.setupServerConnection();
+          }
         }
       }
     );
@@ -120,6 +124,9 @@ export class SwipeArrowScreen  extends React.Component {
   }
 
   setupServerConnection() {
+    if (this.state.pollFunction) {
+      clearInterval(this.state.pollFunction);
+    }
     this.state.pollFunction = setInterval(this.checkStatusFromServer.bind(this), 1000);
   }
 
@@ -140,6 +147,7 @@ export class SwipeArrowScreen  extends React.Component {
             this.setState({
               modalIsOpen:true,
               modalText: 'Eliminated by:' + data.self_hit_by
+              arrowIsFlying: false,
             })
             // do dead things
           }
@@ -147,14 +155,17 @@ export class SwipeArrowScreen  extends React.Component {
           if (data.arrow_hit) {
             // do arrow hit things like show eliminations
             console.log('eliminated', data.arrow_hit_at);
-            this.setState({arrowStatusText: 'Eliminated '+data.arrow_hit_at})
+            this.setState({
+              arrowStatusText: 'Eliminated '+ data.arrow_hit_at,
+              arrowIsFlying: false
+            });
           }
         }
       }
     );
 
   }
-  
+
   closeModal() {
     this.setState({modalIsOpen: false});
   }

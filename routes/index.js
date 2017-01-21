@@ -38,12 +38,20 @@ router.get('/get-status', function(req, res) {
   ) {
     var status1 = checkArrowsHitSelf(usernameid, parseFloat(lat), parseFloat(lng));
     var status2 = checkArrowHitTarget(usernameid);
-    res.send({
+
+    var status = {
       self_hit: status1.hit,
       self_hit_by: status1.by,
       arrow_hit: status2.hit,
       arrow_hit_at: status2.at,
-     });
+    };
+
+    if (status.arrow_hit) {
+      status.arrow_hit_lat = status2.arrow_lat;
+      status.arrow_hit_lng = status2.arrow_lng;
+    }
+
+    res.send(status);
   } else {
     res.send('error');
   }
@@ -64,7 +72,6 @@ function addArrow(usernameid, lat, lng, heading) {
 }
 
 function processingLoop() {
-  console.log('processing...');
   for (var key in arrowGroup) {
     var arrow = arrowGroup[key]
 
@@ -73,7 +80,6 @@ function processingLoop() {
     arrow.lat = newLatLng[0];
     arrow.lng = newLatLng[1];
   }
-  console.log('loop finished.');
 }
 
 function checkArrowsHitSelf(usernameid, targetLat, targetLng) {
@@ -84,6 +90,7 @@ function checkArrowsHitSelf(usernameid, targetLat, targetLng) {
       console.log('collision occured');
       arrow.hit = true;
       arrow.at = usernameid;
+      delete arrowGroup[usernameid];
       return { hit: true, by: key };
     };
   }
@@ -96,7 +103,7 @@ function checkArrowHitTarget(usernameid) {
   console.log(arrow);
   if (arrow && arrow.hit) {
     delete arrowGroup[usernameid];
-    return { hit: true, at: arrow.at };
+    return { hit: true, at: arrow.at, arrow_lat: arrow.lat, arrow_lng: arrow.lng };
   } else {
     return { hit: false, at: null };
   }
@@ -143,6 +150,7 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
 	return dist;
 }
 
+// Do the eval loop
 setInterval(processingLoop, 1000);
 
 module.exports = router;
