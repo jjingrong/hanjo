@@ -22308,6 +22308,8 @@
 	/* 
 	Props received:
 	- username
+	- latitude
+	- longitude
 	*/
 	
 	var topSize = 0.75;
@@ -22334,7 +22336,6 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.state.locationURL);
 	      // User is logged in
 	      return _react2.default.createElement(
 	        'div',
@@ -22372,7 +22373,6 @@
 	    key: 'launchArrow',
 	    value: function launchArrow() {
 	      // Send api to launch
-	
 	      this.setState({ arrowIsFlying: true });
 	      // Start listening to arrow events
 	    }
