@@ -33,7 +33,7 @@ export class LoginScreen extends React.Component {
               <div id='loginFormContainer'>
                 <div>
                   <img height='auto' width='80%' style={{marginLeft:'10%'}} src={"/images/hanjo-logo.png"} />
-                  <div style={styleSheet.hanjoText}>Be a Hanjo</div>
+                  <div style={styleSheet.hanjoText}>Be a Hanjo.</div>
                 </div>
                 <p>
                   <span className="fontawesome-user"></span>

@@ -22193,7 +22193,7 @@
 	                  _react2.default.createElement(
 	                    'div',
 	                    { style: styleSheet.hanjoText },
-	                    'Be a Hanjo'
+	                    'Be a Hanjo.'
 	                  )
 	                ),
 	                _react2.default.createElement(
