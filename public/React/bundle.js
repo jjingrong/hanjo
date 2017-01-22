@@ -22458,7 +22458,7 @@
 	        $.post("/shoot-arrow", info, function (data, status) {
 	          if (status === 'success') {
 	            _this2.setState({ arrowHeading: info.heading });
-	            var angle = parseInt(info.heading / 45) * 45 % 360;
+	            var angle = Math.round(info.heading / 45.0) * 45 % 360;
 	            _this2.state.projectile.setIcon({
 	              url: '/images/arrow_' + angle.toString() + '.png',
 	              scale: new google.maps.Size(50, 50)
@@ -22646,7 +22646,7 @@
 	            visible: true,
 	            icon: {
 	              path: google.maps.SymbolPath.CIRCLE,
-	              scale: 4,
+	              scale: 6,
 	              fillColor: 'red',
 	              fillOpacity: 0.9,
 	              strokeOpacity: 0.9,
@@ -22663,7 +22663,7 @@
 	            sonicArray[i].setMap(null);
 	          }
 	          _this6.setState({ sonic: false });
-	        }, 6000);
+	        }, 12000);
 	      }
 	    }
 	  }, {

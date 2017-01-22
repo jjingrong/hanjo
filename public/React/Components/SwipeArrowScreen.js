@@ -115,10 +115,10 @@ export class SwipeArrowScreen  extends React.Component {
         (data, status) => {
           if (status === 'success') {
             this.setState({ arrowHeading: info.heading });
-            var angle = (parseInt(info.heading / 45) * 45) % 360;
+            var angle = (Math.round(info.heading / 45.0) * 45) % 360;
             this.state.projectile.setIcon({
                 url: '/images/arrow_'+angle.toString()+'.png',
-                scale: new google.maps.Size(50,50),
+                scale: new google.maps.Size(50, 50),
               });
             if (!this.state.arrowIsFlying) {
               this.setState({arrowIsFlying: true});
@@ -299,7 +299,7 @@ export class SwipeArrowScreen  extends React.Component {
           visible: true,
           icon: {
 		        path: google.maps.SymbolPath.CIRCLE,
-		        scale: 4,
+		        scale: 6,
 		        fillColor: 'red',
     				fillOpacity: 0.9,
     				strokeOpacity: 0.9,
@@ -316,7 +316,7 @@ export class SwipeArrowScreen  extends React.Component {
           sonicArray[i].setMap(null);
         }
         this.setState({ sonic: false });
-      }, 6000);
+      }, 12000);
     }
   }
 
