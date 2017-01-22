@@ -9,7 +9,7 @@ export class LoginScreen extends React.Component {
       usernameInput: '',
     }
   }
-  
+
   componentDidMount() {
     if (navigator.geolocation) {
       const options = {
@@ -22,7 +22,7 @@ export class LoginScreen extends React.Component {
       alert("Geolocation is not supported by this browser.")
     }
   }
-  
+
   render() {
     // User is logged in
     return (
@@ -32,12 +32,12 @@ export class LoginScreen extends React.Component {
             <fieldset className="clearfix">
               <div id='loginFormContainer'>
                 <div>
-                  <img height='auto' width='80%' style={{marginLeft:'10%'}} src={"/images/HanzoPixel.png"} />
-                  <div style={styleSheet.hanjoText}>iHanjo</div>
+                  <img height='auto' width='80%' style={{marginLeft:'10%'}} src={"/images/hanjo-logo.png"} />
+                  <div style={styleSheet.hanjoText}>Be a Hanjo</div>
                 </div>
                 <p>
                   <span className="fontawesome-user"></span>
-                  <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>  
+                  <input type="text" placeholder="Name" value={this.state.usernameInput} onChange={this.handleChange.bind(this)} required/>
                 </p>
                 <p style={{marginTop:'25px'}}>
                   {this.renderButton()}
@@ -49,7 +49,7 @@ export class LoginScreen extends React.Component {
       </div>
     )
   }
-  
+
   renderButton() {
     if (this.props.latitude) {
       return (<input type="submit" value="Step into the dojo" style={styleSheet.loginButton}/>)
@@ -57,11 +57,11 @@ export class LoginScreen extends React.Component {
       return (<input type="submit" value="Getting location" style={styleSheet.invalidLoginButton}/>)
     }
   }
-  
+
   handleChange(event) {
     this.setState({usernameInput: event.target.value});
   }
-  
+
   handleSubmit(event) {
     event.preventDefault();
     if (this.props.latitude) {
@@ -70,7 +70,7 @@ export class LoginScreen extends React.Component {
       alert('We need your location!')
     }
   }
-  
+
   storePosition(position) {
     console.log('got position')
     this.setState({
@@ -79,7 +79,7 @@ export class LoginScreen extends React.Component {
       this.props.setLatLong(position.coords.latitude, position.coords.longitude)
     })
   }
-  
+
   showError(error) {
     switch(error.code) {
       case error.PERMISSION_DENIED:
@@ -96,7 +96,7 @@ export class LoginScreen extends React.Component {
       break;
     }
   }
-  
+
 }
 
 const styleSheet = {
@@ -110,6 +110,7 @@ const styleSheet = {
   hanjoText: {
     textAlign: 'center',
     color: 'whitesmoke',
-    fontSize: '18px'
+    fontSize: '32px',
+    fontFamily: 'bignoodletoo'
   }
 }

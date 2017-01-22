@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var allArrow = []
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Hanjo' });
@@ -45,7 +45,8 @@ router.get('/get-status', function(req, res) {
       arrow_hit: status2.hit,
       arrow_hit_at: status2.at,
       arrow_lat: status2.arrow_lat || 0,
-      arrow_lng: status2.arrow_lng || 0
+      arrow_lng: status2.arrow_lng || 0,
+      enemies: alivePoints
     }
 
     if (status2.expired) {
@@ -60,6 +61,7 @@ router.get('/get-status', function(req, res) {
 });
 
 var arrowGroup = {};
+var alivePoints = [];
 const HIT_DIST = 0.025; // 25m range
 const SPEED_DIST = 0.005 // 5m/sec
 
@@ -70,7 +72,9 @@ function addArrow(usernameid, lat, lng, heading) {
     heading: heading,
     hit: false,
     count: 0,
-    expired: false
+    expired: false,
+    sourceLat: lat,
+    sourceLng: lng
   };
 }
 
@@ -88,6 +92,9 @@ function processingLoop() {
     if (arrow.count > 90) {
       arrow.expired = true;
     }
+
+    // Populate surviving hanzos
+    alivePoints.push({ lat: arrow.sourceLat, lng: arrow.sourceLng });
   }
 }
 

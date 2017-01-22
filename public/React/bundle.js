@@ -22189,11 +22189,11 @@
 	                _react2.default.createElement(
 	                  'div',
 	                  null,
-	                  _react2.default.createElement('img', { height: 'auto', width: '80%', style: { marginLeft: '10%' }, src: "/images/HanzoPixel.png" }),
+	                  _react2.default.createElement('img', { height: 'auto', width: '80%', style: { marginLeft: '10%' }, src: "/images/hanjo-logo.png" }),
 	                  _react2.default.createElement(
 	                    'div',
 	                    { style: styleSheet.hanjoText },
-	                    'iHanjo'
+	                    'Be a Hanjo'
 	                  )
 	                ),
 	                _react2.default.createElement(
@@ -22283,7 +22283,8 @@
 	  hanjoText: {
 	    textAlign: 'center',
 	    color: 'whitesmoke',
-	    fontSize: '18px'
+	    fontSize: '32px',
+	    fontFamily: 'bignoodletoo'
 	  }
 	};
 
@@ -22348,7 +22349,9 @@
 	      heading: 0,
 	      arrowHeading: 0,
 	      killAudio: new Audio('/sounds/kill.mp3'),
-	      ryugaAudio: new Audio('/sounds/ult.mp3')
+	      ryugaAudio: new Audio('/sounds/ult.mp3'),
+	      enemies: [],
+	      sonic: false
 	    };
 	    return _this;
 	  }
@@ -22507,6 +22510,8 @@
 	  }, {
 	    key: 'setupMap',
 	    value: function setupMap() {
+	      var _this4 = this;
+	
 	      var hanzo = new google.maps.LatLng(parseFloat(this.props.latitude), parseFloat(this.props.longitude));
 	
 	      var map = new google.maps.Map(document.getElementById('map'), {
@@ -22515,7 +22520,38 @@
 	        heading: 0
 	      });
 	
-	      var bounds = new google.maps.LatLngBounds();
+	      var SonicControl = function SonicControl(controlDiv, map) {
+	        // Set CSS for the control border.
+	        var controlUI = document.createElement('div');
+	        controlUI.style.backgroundColor = '#2c3338';
+	        controlUI.style.border = '2px solid #fff';
+	        controlUI.style.borderRadius = '3px';
+	        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+	        controlUI.style.cursor = 'pointer';
+	        controlUI.style.margin = '12px';
+	        controlUI.style.textAlign = 'center';
+	        controlDiv.appendChild(controlUI);
+	
+	        // Set CSS for the control interior.
+	        var controlText = document.createElement('div');
+	        controlText.style.color = 'rgb(25,25,25)';
+	        controlText.style.paddingLeft = '5px';
+	        controlText.style.paddingRight = '5px';
+	        controlText.style.paddingTop = '5px';
+	        controlText.innerHTML = '<img src="/images/icon-ability-sonic.png" />';
+	        controlUI.appendChild(controlText);
+	
+	        // Setup the click event listeners: simply set the map to Chicago.
+	        controlUI.addEventListener('click', function () {
+	          _this4.toggleSonic();
+	        });
+	      };
+	
+	      var sonicControlDiv = document.createElement('div');
+	      var sonicControl = new SonicControl(sonicControlDiv, map);
+	
+	      sonicControlDiv.index = 1;
+	      map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(sonicControlDiv);
 	
 	      map.setOptions({ draggable: false, zoomControl: false, disableDefaultUI: true });
 	      this.setState({ map: map });
@@ -22535,7 +22571,7 @@
 	  }, {
 	    key: 'checkStatusFromServer',
 	    value: function checkStatusFromServer() {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      $.get("/get-status", {
 	        lat: this.props.latitude,
@@ -22545,34 +22581,37 @@
 	        console.log(data, status);
 	        if (status === 'success') {
 	          // Move projectile
-	          _this4.state.projectile.setVisible(true);
+	          _this5.state.projectile.setVisible(true);
 	          var newPos = new google.maps.LatLng(parseFloat(data.arrow_lat), parseFloat(data.arrow_lng));
-	          _this4.state.projectile.setPosition(newPos);
-	          console.log(data.arrow_lat, data.arrow_lng);
+	          _this5.state.projectile.setPosition(newPos);
+	
+	          // Get alive enemies
+	          _this5.setState({ enemies: data.enemies });
+	
 	          if (data.self_hit) {
 	            // dead, so we reset
-	            clearInterval(_this4.state.pollFunction);
+	            clearInterval(_this5.state.pollFunction);
 	            console.log('eliminated by', data.self_hit_by);
-	            _this4.setState({
+	            _this5.setState({
 	              modalIsOpen: true,
 	              modalText: 'Eliminated by:' + data.self_hit_by,
 	              arrowIsFlying: false
 	            });
 	            // do dead things
-	            _this4.state.projectile.setVisible(false);
+	            _this5.state.projectile.setVisible(false);
 	          }
 	
 	          if (data.arrow_hit) {
 	            // do arrow hit things like show eliminations
 	            console.log('eliminated', data.arrow_hit_at);
-	            _this4.state.killAudio.play();
-	            _this4.state.projectile.setVisible(false);
+	            _this5.state.killAudio.play();
+	            _this5.state.projectile.setVisible(false);
 	
-	            _this4.setState({
+	            _this5.setState({
 	              arrowStatusText: 'Eliminated ' + data.arrow_hit_at
 	            }, function () {
 	              setTimeout(function () {
-	                _this4.setState({ arrowIsFlying: false, arrowStatusText: 'Traversing' });
+	                _this5.setState({ arrowIsFlying: false, arrowStatusText: 'Traversing' });
 	              }, 5000);
 	            });
 	          }
@@ -22580,17 +22619,52 @@
 	          if (data.expired) {
 	            // do expired things
 	            console.log('expired you missed');
-	            _this4.state.projectile.setVisible(false);
-	            _this4.setState({
+	            _this5.state.projectile.setVisible(false);
+	            _this5.setState({
 	              arrowStatusText: 'You missed, resetting arrow . . '
 	            }, function () {
 	              setTimeout(function () {
-	                _this4.setState({ arrowIsFlying: false, arrowStatusText: 'Traversing' });
+	                _this5.setState({ arrowIsFlying: false, arrowStatusText: 'Traversing' });
 	              }, 3000);
 	            });
 	          }
 	        }
 	      });
+	    }
+	  }, {
+	    key: 'toggleSonic',
+	    value: function toggleSonic() {
+	      var _this6 = this;
+	
+	      if (!this.state.sonic) {
+	        this.setState({ sonic: true });
+	        var sonicArray = [];
+	        for (var i = 0; i < this.state.enemies.length; i++) {
+	          var enemyMarker = new google.maps.Marker({
+	            position: this.state.enemies[i],
+	            map: this.state.map,
+	            visible: true,
+	            icon: {
+	              path: google.maps.SymbolPath.CIRCLE,
+	              scale: 4,
+	              fillColor: 'red',
+	              fillOpacity: 0.9,
+	              strokeOpacity: 0.9,
+	              strokeWeight: 1.0,
+	              strokeColor: '#2f4f4f'
+	            }
+	          });
+	          sonicArray.push(enemyMarker);
+	        }
+	
+	        setTimeout(function () {
+	          for (var i = 0; i < sonicArray.length; i++) {
+	            sonicArray[i].setVisible(false);
+	            sonicArray[i].setMap(null);
+	          }
+	          _this6.setState({ sonic: false });
+	        }, 6000);
+	      }
 	    }
 	  }, {
 	    key: 'closeModal',

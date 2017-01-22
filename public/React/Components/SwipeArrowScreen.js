@@ -23,7 +23,9 @@ export class SwipeArrowScreen  extends React.Component {
       heading: 0,
       arrowHeading: 0,
       killAudio: new Audio('/sounds/kill.mp3'),
-      ryugaAudio: new Audio('/sounds/ult.mp3')
+      ryugaAudio: new Audio('/sounds/ult.mp3'),
+      enemies: [],
+      sonic: false
     }
   }
 
@@ -171,7 +173,40 @@ export class SwipeArrowScreen  extends React.Component {
       heading: 0
     });
 
-    var bounds = new google.maps.LatLngBounds();
+    var SonicControl = (controlDiv, map) => {
+      // Set CSS for the control border.
+      var controlUI = document.createElement('div');
+      controlUI.style.backgroundColor = '#2c3338';
+      controlUI.style.border = '2px solid #fff';
+      controlUI.style.borderRadius = '3px';
+      controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+      controlUI.style.cursor = 'pointer';
+      controlUI.style.margin = '12px';
+      controlUI.style.textAlign = 'center';
+      controlDiv.appendChild(controlUI);
+
+      // Set CSS for the control interior.
+      var controlText = document.createElement('div');
+      controlText.style.color = 'rgb(25,25,25)';
+      controlText.style.paddingLeft = '5px';
+      controlText.style.paddingRight = '5px';
+      controlText.style.paddingTop = '5px';
+      controlText.innerHTML = '<img src="/images/icon-ability-sonic.png" />';
+      controlUI.appendChild(controlText);
+
+      // Setup the click event listeners: simply set the map to Chicago.
+      controlUI.addEventListener('click', () => {
+        this.toggleSonic();
+      });
+
+    }
+
+    var sonicControlDiv = document.createElement('div');
+    var sonicControl = new SonicControl(sonicControlDiv, map);
+
+    sonicControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(sonicControlDiv);
+
 
     map.setOptions({ draggable: false, zoomControl: false, disableDefaultUI: true });
     this.setState({ map: map });
@@ -203,7 +238,10 @@ export class SwipeArrowScreen  extends React.Component {
           this.state.projectile.setVisible(true);
           var newPos = new google.maps.LatLng(parseFloat(data.arrow_lat), parseFloat(data.arrow_lng));
           this.state.projectile.setPosition(newPos);
-          console.log(data.arrow_lat, data.arrow_lng);
+
+          // Get alive enemies
+          this.setState({ enemies: data.enemies });
+
           if (data.self_hit) {
             // dead, so we reset
             clearInterval(this.state.pollFunction);
@@ -248,6 +286,38 @@ export class SwipeArrowScreen  extends React.Component {
       }
     );
 
+  }
+
+  toggleSonic() {
+    if (!this.state.sonic) {
+      this.setState({ sonic: true });
+      var sonicArray = [];
+      for (var i=0; i<this.state.enemies.length; i++) {
+        var enemyMarker = new google.maps.Marker({
+          position: this.state.enemies[i],
+          map: this.state.map,
+          visible: true,
+          icon: {
+		        path: google.maps.SymbolPath.CIRCLE,
+		        scale: 4,
+		        fillColor: 'red',
+    				fillOpacity: 0.9,
+    				strokeOpacity: 0.9,
+    				strokeWeight: 1.0,
+    				strokeColor: '#2f4f4f'
+  		    }
+        });
+        sonicArray.push(enemyMarker);
+      }
+
+      setTimeout(() => {
+        for (var i=0; i<sonicArray.length; i++) {
+          sonicArray[i].setVisible(false);
+          sonicArray[i].setMap(null);
+        }
+        this.setState({ sonic: false });
+      }, 6000);
+    }
   }
 
   closeModal() {
