@@ -270,6 +270,7 @@ const styleSheet = {
     marginLeft: '5%',
   },
   respawnButton : {
+    minHeight: '40px',
     padding: '20px',
     textAlign: 'center',
     display: 'flex',
