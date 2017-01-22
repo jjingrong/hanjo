@@ -16,6 +16,15 @@ class MainPanel extends React.Component {
   }
   
   render() {
+    // Not mobile
+    if (screen.width > 480) {
+      return (
+        <div className='container'>
+          <h1 style={{fontSize:'24px'}}>Please visit Hanjo on your phone!</h1>
+        </div>
+      )
+    }
+    
     // User is logged in
     if (this.state.username) {
       return (

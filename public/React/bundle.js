@@ -90,6 +90,19 @@
 	  _createClass(MainPanel, [{
 	    key: 'render',
 	    value: function render() {
+	      // Not mobile
+	      if (screen.width > 480) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'container' },
+	          _react2.default.createElement(
+	            'h1',
+	            { style: { fontSize: '24px' } },
+	            'Please visit Hanjo on your phone!'
+	          )
+	        );
+	      }
+	
 	      // User is logged in
 	      if (this.state.username) {
 	        return _react2.default.createElement(_SwipeArrowScreen.SwipeArrowScreen, {
