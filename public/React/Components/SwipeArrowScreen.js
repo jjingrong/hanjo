@@ -270,6 +270,7 @@ const styleSheet = {
     marginLeft: '5%',
   },
   respawnButton : {
+    padding: '20px',
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
@@ -277,8 +278,6 @@ const styleSheet = {
     WebkitDisplay: 'flex',
     WebkitAlignItems: 'center',
     WebkitJustifyContent: 'center',
-    position: 'absolute',
-    bottom: '0',
   },
 }
 
@@ -306,6 +305,8 @@ const modalStyles = {
     WebkitDisplay         : 'flex',
     WebkitJustifyContent  : 'center',
     height                : '30vh',
-    width                 : '60%'
+    width                 : '60%',
+    flexDirection: 'column',
+    alignItems: 'center',
   }
 };

@@ -22395,7 +22395,7 @@
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { id: 'respawnButton', style: styleSheet.button, onClick: this.respawn.bind(this) },
+	          { id: 'respawnButton', style: styleSheet.respawnButton, onClick: this.respawn.bind(this) },
 	          'Respawn'
 	        )
 	      );
@@ -22603,6 +22603,16 @@
 	    bottom: '0',
 	    width: '90%',
 	    marginLeft: '5%'
+	  },
+	  respawnButton: {
+	    padding: '20px',
+	    textAlign: 'center',
+	    display: 'flex',
+	    alignItems: 'center',
+	    justifyContent: 'center',
+	    WebkitDisplay: 'flex',
+	    WebkitAlignItems: 'center',
+	    WebkitJustifyContent: 'center'
 	  }
 	};
 	
@@ -22630,7 +22640,9 @@
 	    WebkitDisplay: 'flex',
 	    WebkitJustifyContent: 'center',
 	    height: '30vh',
-	    width: '60%'
+	    width: '60%',
+	    flexDirection: 'column',
+	    alignItems: 'center'
 	  }
 	};
 
