@@ -17,3 +17,8 @@ Visit webpage at `localhost:3000`
 ### Built with
 
 - Node/Express
+- React.js/Webpack
+
+---
+
+# Please visit on mobile only (it's a GPS game!)
